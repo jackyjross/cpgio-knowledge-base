@@ -21,8 +21,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <div id="root"></div>
@@ -33,6 +31,28 @@
     <!-- Main Application -->
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
+
+        // Icon helper function
+        const Icon = ({ name, size = 20, strokeWidth = 2, ...props }) => {
+            const iconMap = {
+                'home': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+                'zap': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+                'bar-chart-3': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>',
+                'trending-up': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>',
+                'target': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+                'sparkles': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>',
+                'file-text': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>',
+                'menu': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>',
+                'moon': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>',
+                'sun': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>',
+                'upload': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>',
+                'arrow-right': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>'
+            };
+
+            const svg = iconMap[name] || iconMap['home'];
+            const finalSvg = svg.replace(/SIZE/g, size).replace(/STROKE/g, strokeWidth);
+            return <span dangerouslySetInnerHTML={{ __html: finalSvg }} {...props} />;
+        };
 
         // Main App Component
         function App() {
@@ -116,12 +136,9 @@
                         className="theme-toggle"
                         onClick={toggleTheme}
                         aria-label="Toggle theme"
-                        dangerouslySetInnerHTML={{
-                            __html: theme === 'light'
-                                ? lucide.icons.moon.toSvg()
-                                : lucide.icons.sun.toSvg()
-                        }}
-                    />
+                    >
+                        <Icon name={theme === 'light' ? 'moon' : 'sun'} size={24} />
+                    </button>
                 </div>
             );
         }
@@ -155,7 +172,7 @@
                                 onClick={() => setActiveSection(item.id)}
                                 title={!sidebarOpen ? item.label : ''}
                             >
-                                <span className="nav-icon" dangerouslySetInnerHTML={{ __html: lucide.icons[item.icon].toSvg() }} />
+                                <span className="nav-icon"><Icon name={item.icon} size={20} /></span>
                                 {sidebarOpen && <span className="nav-label">{item.label}</span>}
                             </button>
                         ))}
@@ -184,8 +201,9 @@
                             className="sidebar-toggle"
                             onClick={() => setSidebarOpen(!sidebarOpen)}
                             aria-label="Toggle sidebar"
-                            dangerouslySetInnerHTML={{ __html: lucide.icons.menu.toSvg() }}
-                        />
+                        >
+                            <Icon name="menu" size={24} />
+                        </button>
                     </div>
 
                     <div className="header-search">
@@ -215,7 +233,7 @@
 
                     <div className="card-grid">
                         <div className="feature-card" onClick={() => setActiveSection('capabilities')}>
-                            <div className="card-icon" dangerouslySetInnerHTML={{ __html: lucide.icons.zap.toSvg() }} />
+                            <div className="card-icon"><Icon name="zap" size={32} /></div>
                             <h3 className="card-title">Capabilities</h3>
                             <p className="card-description">
                                 12 core capabilities spanning integrated operations, financial flexibility,
@@ -228,7 +246,7 @@
                         </div>
 
                         <div className="feature-card" onClick={() => setActiveSection('case-studies')}>
-                            <div className="card-icon" dangerouslySetInnerHTML={{ __html: lucide.icons['bar-chart-3'].toSvg() }} />
+                            <div className="card-icon"><Icon name="bar-chart-3" size={32} /></div>
                             <h3 className="card-title">Case Studies</h3>
                             <p className="card-description">
                                 Real client success stories with quantified results across fulfillment,
@@ -241,7 +259,7 @@
                         </div>
 
                         <div className="feature-card" onClick={() => setActiveSection('kpis')}>
-                            <div className="card-icon" dangerouslySetInnerHTML={{ __html: lucide.icons['trending-up'].toSvg() }} />
+                            <div className="card-icon"><Icon name="trending-up" size={32} /></div>
                             <h3 className="card-title">Service KPIs</h3>
                             <p className="card-description">
                                 Performance metrics and benchmarks across fulfillment, media,
@@ -254,7 +272,7 @@
                         </div>
 
                         <div className="feature-card highlight" onClick={() => setActiveSection('ai-qa')}>
-                            <div className="card-icon" dangerouslySetInnerHTML={{ __html: lucide.icons.sparkles.toSvg() }} />
+                            <div className="card-icon"><Icon name="sparkles" size={32} /></div>
                             <h3 className="card-title">AI Q&A</h3>
                             <p className="card-description">
                                 Ask questions about CPGIO's capabilities, approach, and services.
@@ -264,7 +282,7 @@
                         </div>
 
                         <div className="feature-card highlight" onClick={() => setActiveSection('rfp-analyzer')}>
-                            <div className="card-icon" dangerouslySetInnerHTML={{ __html: lucide.icons['file-text'].toSvg() }} />
+                            <div className="card-icon"><Icon name="file-text" size={32} /></div>
                             <h3 className="card-title">RFP Analyzer</h3>
                             <p className="card-description">
                                 Upload Excel RFPs for intelligent analysis. Automatically extract questions
@@ -274,7 +292,7 @@
                         </div>
 
                         <div className="feature-card" onClick={() => setActiveSection('frameworks')}>
-                            <div className="card-icon" dangerouslySetInnerHTML={{ __html: lucide.icons.target.toSvg() }} />
+                            <div className="card-icon"><Icon name="target" size={32} /></div>
                             <h3 className="card-title">Frameworks</h3>
                             <p className="card-description">
                                 Strategic frameworks including Financial Models, Go-To-Market Approach,
@@ -905,7 +923,7 @@
                     {!uploadedRFP ? (
                         <div className="upload-section">
                             <div className="upload-box" onClick={() => fileInputRef.current?.click()}>
-                                <div className="upload-icon" dangerouslySetInnerHTML={{ __html: lucide.icons.upload.toSvg({ size: 80, strokeWidth: 1.5 }) }} />
+                                <div className="upload-icon"><Icon name="upload" size={80} strokeWidth={1.5} /></div>
                                 <h3 className="upload-title">Upload RFP Excel File</h3>
                                 <p className="upload-description">
                                     Click to browse or drag and drop your RFP file here
