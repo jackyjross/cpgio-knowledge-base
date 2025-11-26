@@ -288,8 +288,8 @@ Response Collection → Template Export
 ## 📞 Support & Maintenance
 
 ### Contact Information
-- **Email**: ronny.sage@cpgio.com
-- **Phone**: (847) 340-2939
+- **Email**: sales@cpgio.com
+- **Phone**: (866) 764-4605 ext 712
 - **Website**: [cpg.io](https://cpg.io)
 
 ### Maintenance Tasks

@@ -206,8 +206,8 @@ Edit `index.html` to add new React components or functionality.
 ## 📧 Support
 
 For questions or issues:
-- **Email**: ronny.sage@cpgio.com
-- **Phone**: (847) 340-2939
+- **Email**: sales@cpgio.com
+- **Phone**: (866) 764-4605 ext 712
 
 ## ✅ Deployment Checklist
 
