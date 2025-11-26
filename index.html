@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPGIO Knowledge Base | Capabilities, KPIs & RFP Intelligence</title>
+
+    <!-- React and ReactDOM via CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- SheetJS for Excel parsing -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Preconnect for fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- Knowledge Base Data -->
+    <script src="knowledge-base-data.js"></script>
+
+    <!-- Main Application -->
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Main App Component
+        function App() {
+            const [activeSection, setActiveSection] = useState('home');
+            const [searchQuery, setSearchQuery] = useState('');
+            const [aiQuery, setAiQuery] = useState('');
+            const [aiResponse, setAiResponse] = useState(null);
+            const [aiLoading, setAiLoading] = useState(false);
+            const [uploadedRFP, setUploadedRFP] = useState(null);
+            const [sidebarOpen, setSidebarOpen] = useState(true);
+            const [selectedCapability, setSelectedCapability] = useState(null);
+            const [selectedCaseStudy, setSelectedCaseStudy] = useState(null);
+
+            return (
+                <div className="app-container">
+                    <Sidebar
+                        activeSection={activeSection}
+                        setActiveSection={setActiveSection}
+                        sidebarOpen={sidebarOpen}
+                        setSidebarOpen={setSidebarOpen}
+                    />
+
+                    <main className={`main-content ${!sidebarOpen ? 'sidebar-collapsed' : ''}`}>
+                        <Header
+                            searchQuery={searchQuery}
+                            setSearchQuery={setSearchQuery}
+                            setSidebarOpen={setSidebarOpen}
+                            sidebarOpen={sidebarOpen}
+                        />
+
+                        <div className="content-wrapper">
+                            {activeSection === 'home' && <HomePage setActiveSection={setActiveSection} />}
+                            {activeSection === 'capabilities' && (
+                                <CapabilitiesPage
+                                    selectedCapability={selectedCapability}
+                                    setSelectedCapability={setSelectedCapability}
+                                    searchQuery={searchQuery}
+                                />
+                            )}
+                            {activeSection === 'case-studies' && (
+                                <CaseStudiesPage
+                                    selectedCaseStudy={selectedCaseStudy}
+                                    setSelectedCaseStudy={setSelectedCaseStudy}
+                                    searchQuery={searchQuery}
+                                />
+                            )}
+                            {activeSection === 'kpis' && <KPIsPage searchQuery={searchQuery} />}
+                            {activeSection === 'ai-qa' && (
+                                <AIQAPage
+                                    aiQuery={aiQuery}
+                                    setAiQuery={setAiQuery}
+                                    aiResponse={aiResponse}
+                                    setAiResponse={setAiResponse}
+                                    aiLoading={aiLoading}
+                                    setAiLoading={setAiLoading}
+                                />
+                            )}
+                            {activeSection === 'rfp-analyzer' && (
+                                <RFPAnalyzerPage
+                                    uploadedRFP={uploadedRFP}
+                                    setUploadedRFP={setUploadedRFP}
+                                />
+                            )}
+                            {activeSection === 'frameworks' && <FrameworksPage searchQuery={searchQuery} />}
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        // Sidebar Component
+        function Sidebar({ activeSection, setActiveSection, sidebarOpen, setSidebarOpen }) {
+            const navItems = [
+                { id: 'home', label: 'Home', icon: '🏠' },
+                { id: 'capabilities', label: 'Capabilities', icon: '⚡' },
+                { id: 'case-studies', label: 'Case Studies', icon: '📊' },
+                { id: 'kpis', label: 'Service KPIs', icon: '📈' },
+                { id: 'frameworks', label: 'Frameworks', icon: '🎯' },
+                { id: 'ai-qa', label: 'AI Q&A', icon: '🤖' },
+                { id: 'rfp-analyzer', label: 'RFP Analyzer', icon: '📄' },
+            ];
+
+            return (
+                <aside className={`sidebar ${!sidebarOpen ? 'collapsed' : ''}`}>
+                    <div className="sidebar-header">
+                        <div className="logo">
+                            <span className="logo-icon">CPG</span>
+                            {sidebarOpen && <span className="logo-text">.io Knowledge Base</span>}
+                        </div>
+                    </div>
+
+                    <nav className="sidebar-nav">
+                        {navItems.map(item => (
+                            <button
+                                key={item.id}
+                                className={`nav-item ${activeSection === item.id ? 'active' : ''}`}
+                                onClick={() => setActiveSection(item.id)}
+                                title={!sidebarOpen ? item.label : ''}
+                            >
+                                <span className="nav-icon">{item.icon}</span>
+                                {sidebarOpen && <span className="nav-label">{item.label}</span>}
+                            </button>
+                        ))}
+                    </nav>
+
+                    {sidebarOpen && (
+                        <div className="sidebar-footer">
+                            <div className="contact-info">
+                                <p className="contact-label">Contact</p>
+                                <p className="contact-detail">ronny.sage@cpgio.com</p>
+                                <p className="contact-detail">(847) 340-2939</p>
+                                <a href="https://cpg.io" target="_blank" className="contact-link">cpg.io</a>
+                            </div>
+                        </div>
+                    )}
+                </aside>
+            );
+        }
+
+        // Header Component
+        function Header({ searchQuery, setSearchQuery, setSidebarOpen, sidebarOpen }) {
+            return (
+                <header className="header">
+                    <div className="header-left">
+                        <button
+                            className="sidebar-toggle"
+                            onClick={() => setSidebarOpen(!sidebarOpen)}
+                            aria-label="Toggle sidebar"
+                        >
+                            ☰
+                        </button>
+                    </div>
+
+                    <div className="header-search">
+                        <input
+                            type="text"
+                            placeholder="Search capabilities, case studies, KPIs..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="search-input"
+                        />
+                    </div>
+                </header>
+            );
+        }
+
+        // Home Page Component
+        function HomePage({ setActiveSection }) {
+            return (
+                <div className="page-content">
+                    <div className="hero-section">
+                        <h1 className="page-title">CPGIO Knowledge Base</h1>
+                        <p className="page-subtitle">
+                            Explore our capabilities, proven results, and service-level KPIs.
+                            Use AI-powered Q&A for brand discovery or analyze RFPs with intelligent automation.
+                        </p>
+                    </div>
+
+                    <div className="card-grid">
+                        <div className="feature-card" onClick={() => setActiveSection('capabilities')}>
+                            <div className="card-icon">⚡</div>
+                            <h3 className="card-title">Capabilities</h3>
+                            <p className="card-description">
+                                12 core capabilities spanning integrated operations, financial flexibility,
+                                ASIN prioritization, fulfillment excellence, and more.
+                            </p>
+                            <div className="card-stats">
+                                <span className="stat-badge">12 Capabilities</span>
+                                <span className="stat-badge">60+ KPIs</span>
+                            </div>
+                        </div>
+
+                        <div className="feature-card" onClick={() => setActiveSection('case-studies')}>
+                            <div className="card-icon">📊</div>
+                            <h3 className="card-title">Case Studies</h3>
+                            <p className="card-description">
+                                Real client success stories with quantified results across fulfillment,
+                                growth, media, and brand protection.
+                            </p>
+                            <div className="card-stats">
+                                <span className="stat-badge">20+ Case Studies</span>
+                                <span className="stat-badge">8 Categories</span>
+                            </div>
+                        </div>
+
+                        <div className="feature-card" onClick={() => setActiveSection('kpis')}>
+                            <div className="card-icon">📈</div>
+                            <h3 className="card-title">Service KPIs</h3>
+                            <p className="card-description">
+                                Performance metrics and benchmarks across fulfillment, media,
+                                growth, compliance, and omnichannel execution.
+                            </p>
+                            <div className="card-stats">
+                                <span className="stat-badge">6 Categories</span>
+                                <span className="stat-badge">Verified Data</span>
+                            </div>
+                        </div>
+
+                        <div className="feature-card highlight" onClick={() => setActiveSection('ai-qa')}>
+                            <div className="card-icon">🤖</div>
+                            <h3 className="card-title">AI Q&A</h3>
+                            <p className="card-description">
+                                Ask questions about CPGIO's capabilities, approach, and services.
+                                Get instant, context-aware answers from our knowledge base.
+                            </p>
+                            <div className="card-badge">Try it now</div>
+                        </div>
+
+                        <div className="feature-card highlight" onClick={() => setActiveSection('rfp-analyzer')}>
+                            <div className="card-icon">📄</div>
+                            <h3 className="card-title">RFP Analyzer</h3>
+                            <p className="card-description">
+                                Upload Excel RFPs for intelligent analysis. Automatically extract questions
+                                and format for streamlined response creation.
+                            </p>
+                            <div className="card-badge">Upload RFP</div>
+                        </div>
+
+                        <div className="feature-card" onClick={() => setActiveSection('frameworks')}>
+                            <div className="card-icon">🎯</div>
+                            <h3 className="card-title">Frameworks</h3>
+                            <p className="card-description">
+                                Strategic frameworks including Financial Models, Go-To-Market Approach,
+                                and ASIN Scorecard System.
+                            </p>
+                            <div className="card-stats">
+                                <span className="stat-badge">2 Frameworks</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="quick-stats">
+                        <h2 className="section-title">Performance Highlights</h2>
+                        <div className="stats-grid">
+                            <div className="stat-item">
+                                <div className="stat-value">48K units/hr</div>
+                                <div className="stat-label">Peak Velocity</div>
+                            </div>
+                            <div className="stat-item">
+                                <div className="stat-value">5-8x</div>
+                                <div className="stat-label">ROAS Range</div>
+                            </div>
+                            <div className="stat-item">
+                                <div className="stat-value">$526K</div>
+                                <div className="stat-label">Monthly Revenue Recovery</div>
+                            </div>
+                            <div className="stat-item">
+                                <div className="stat-value">800+</div>
+                                <div className="stat-label">ASINs Launched</div>
+                            </div>
+                            <div className="stat-item">
+                                <div className="stat-value">56</div>
+                                <div className="stat-label">Sellers Removed</div>
+                            </div>
+                            <div className="stat-item">
+                                <div className="stat-value">&lt;0.01%</div>
+                                <div className="stat-label">Defect Rate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Capabilities Page Component
+        function CapabilitiesPage({ selectedCapability, setSelectedCapability, searchQuery }) {
+            const filteredCapabilities = knowledgeBase.capabilities.filter(cap =>
+                cap.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                cap.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                cap.category.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+
+            if (selectedCapability) {
+                const capability = knowledgeBase.capabilities.find(c => c.id === selectedCapability);
+                return <CapabilityDetail capability={capability} onBack={() => setSelectedCapability(null)} />;
+            }
+
+            const categories = [...new Set(knowledgeBase.capabilities.map(c => c.category))];
+
+            return (
+                <div className="page-content">
+                    <div className="page-header">
+                        <h1 className="page-title">CPGIO Capabilities</h1>
+                        <p className="page-subtitle">
+                            Comprehensive overview of CPGIO's operational capabilities, strategic frameworks,
+                            and service-level performance metrics.
+                        </p>
+                    </div>
+
+                    {categories.map(category => {
+                        const capsInCategory = filteredCapabilities.filter(c => c.category === category);
+                        if (capsInCategory.length === 0) return null;
+
+                        return (
+                            <div key={category} className="capability-category">
+                                <h2 className="category-title">{category}</h2>
+                                <div className="capability-list">
+                                    {capsInCategory.map(cap => (
+                                        <div
+                                            key={cap.id}
+                                            className="capability-card"
+                                            onClick={() => setSelectedCapability(cap.id)}
+                                        >
+                                            <h3 className="capability-title">{cap.title}</h3>
+                                            <p className="capability-description">{cap.description}</p>
+
+                                            <div className="kpi-preview">
+                                                {cap.kpis.slice(0, 3).map((kpi, idx) => (
+                                                    <div key={idx} className="kpi-badge">
+                                                        <span className="kpi-metric">{kpi.metric}:</span>
+                                                        <span className="kpi-value">{kpi.value}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <div className="card-footer">
+                                                <span className="view-details">View details →</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        }
+
+        // Capability Detail Component
+        function CapabilityDetail({ capability, onBack }) {
+            return (
+                <div className="page-content">
+                    <button className="back-button" onClick={onBack}>
+                        ← Back to Capabilities
+                    </button>
+
+                    <div className="detail-header">
+                        <div className="category-badge">{capability.category}</div>
+                        <h1 className="detail-title">{capability.title}</h1>
+                        <p className="detail-description">{capability.description}</p>
+                    </div>
+
+                    <div className="detail-section">
+                        <h2 className="section-title">Key Points</h2>
+                        <ul className="key-points-list">
+                            {capability.keyPoints.map((point, idx) => (
+                                <li key={idx} className="key-point">{point}</li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className="detail-section">
+                        <h2 className="section-title">Service-Level KPIs</h2>
+                        <div className="kpi-grid">
+                            {capability.kpis.map((kpi, idx) => (
+                                <div key={idx} className="kpi-card">
+                                    <div className="kpi-card-value">{kpi.value}</div>
+                                    <div className="kpi-card-metric">{kpi.metric}</div>
+                                    <div className="kpi-card-description">{kpi.description}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {capability.relatedCaseStudies && capability.relatedCaseStudies.length > 0 && (
+                        <div className="detail-section">
+                            <h2 className="section-title">Related Case Studies</h2>
+                            <div className="related-cases">
+                                {capability.relatedCaseStudies.map(caseId => {
+                                    const caseStudy = knowledgeBase.caseStudies.find(c => c.id === caseId);
+                                    if (!caseStudy) return null;
+                                    return (
+                                        <div key={caseId} className="mini-case-card">
+                                            <h4 className="mini-case-title">{caseStudy.title}</h4>
+                                            <p className="mini-case-category">{caseStudy.category}</p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Case Studies Page Component
+        function CaseStudiesPage({ selectedCaseStudy, setSelectedCaseStudy, searchQuery }) {
+            const filteredCaseStudies = knowledgeBase.caseStudies.filter(cs =>
+                cs.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                cs.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                cs.challenge.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+
+            if (selectedCaseStudy) {
+                const caseStudy = knowledgeBase.caseStudies.find(c => c.id === selectedCaseStudy);
+                return <CaseStudyDetail caseStudy={caseStudy} onBack={() => setSelectedCaseStudy(null)} />;
+            }
+
+            const categories = [...new Set(knowledgeBase.caseStudies.map(c => c.category))];
+
+            return (
+                <div className="page-content">
+                    <div className="page-header">
+                        <h1 className="page-title">Client Success Stories</h1>
+                        <p className="page-subtitle">
+                            Real-world results across fulfillment, growth, media optimization,
+                            brand protection, and omnichannel expansion.
+                        </p>
+                    </div>
+
+                    {categories.map(category => {
+                        const casesInCategory = filteredCaseStudies.filter(c => c.category === category);
+                        if (casesInCategory.length === 0) return null;
+
+                        return (
+                            <div key={category} className="case-study-category">
+                                <h2 className="category-title">{category}</h2>
+                                <div className="case-study-list">
+                                    {casesInCategory.map(cs => (
+                                        <div
+                                            key={cs.id}
+                                            className="case-study-card"
+                                            onClick={() => setSelectedCaseStudy(cs.id)}
+                                        >
+                                            <h3 className="case-study-title">{cs.title}</h3>
+                                            <p className="case-study-brand">{cs.brand}</p>
+                                            <p className="case-study-challenge"><strong>Challenge:</strong> {cs.challenge}</p>
+
+                                            <div className="results-preview">
+                                                {Object.entries(cs.results).slice(0, 2).map(([key, value]) => (
+                                                    <div key={key} className="result-item">
+                                                        <span className="result-value">{value}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <div className="card-footer">
+                                                <span className="view-details">Read full case study →</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        }
+
+        // Case Study Detail Component
+        function CaseStudyDetail({ caseStudy, onBack }) {
+            return (
+                <div className="page-content">
+                    <button className="back-button" onClick={onBack}>
+                        ← Back to Case Studies
+                    </button>
+
+                    <div className="detail-header">
+                        <div className="category-badge">{caseStudy.category}</div>
+                        <h1 className="detail-title">{caseStudy.title}</h1>
+                        <p className="detail-brand">{caseStudy.brand}</p>
+                        {caseStudy.portfolio && <p className="detail-portfolio">{caseStudy.portfolio}</p>}
+                    </div>
+
+                    <div className="detail-section">
+                        <h2 className="section-title">Challenge</h2>
+                        <p className="challenge-text">{caseStudy.challenge}</p>
+                    </div>
+
+                    <div className="detail-section">
+                        <h2 className="section-title">Execution</h2>
+                        <ul className="execution-list">
+                            {caseStudy.execution.map((item, idx) => (
+                                <li key={idx} className="execution-item">{item}</li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className="detail-section">
+                        <h2 className="section-title">Results</h2>
+                        <div className="results-grid">
+                            {Object.entries(caseStudy.results).map(([key, value]) => (
+                                <div key={key} className="result-card">
+                                    <div className="result-value-large">{value}</div>
+                                    <div className="result-label">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // KPIs Page Component
+        function KPIsPage({ searchQuery }) {
+            return (
+                <div className="page-content">
+                    <div className="page-header">
+                        <h1 className="page-title">Service-Level KPIs</h1>
+                        <p className="page-subtitle">
+                            Performance benchmarks and metrics across all service categories,
+                            backed by real client results.
+                        </p>
+                    </div>
+
+                    {Object.entries(knowledgeBase.serviceKPIs).map(([category, kpis]) => (
+                        <div key={category} className="kpi-category">
+                            <h2 className="category-title">{category.charAt(0).toUpperCase() + category.slice(1)}</h2>
+                            <div className="kpi-grid-large">
+                                {Object.entries(kpis).map(([key, kpi]) => (
+                                    <div key={key} className="kpi-card-large">
+                                        <div className="kpi-value-large">{kpi.value}</div>
+                                        <div className="kpi-metric-large">
+                                            {key.replace(/([A-Z])/g, ' $1').trim()}
+                                        </div>
+                                        {kpi.detail && <div className="kpi-detail">{kpi.detail}</div>}
+                                        {kpi.condition && <div className="kpi-condition">{kpi.condition}</div>}
+                                        {kpi.timeline && <div className="kpi-timeline">Timeline: {kpi.timeline}</div>}
+                                        {kpi.source && (
+                                            <div className="kpi-source">
+                                                Source: {typeof kpi.source === 'string' ? kpi.source : kpi.sources?.join(', ')}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        // AI Q&A Page Component (to be continued...)
+        function AIQAPage({ aiQuery, setAiQuery, aiResponse, setAiResponse, aiLoading, setAiLoading }) {
+            const handleAskQuestion = () => {
+                if (!aiQuery.trim()) return;
+
+                setAiLoading(true);
+
+                // Simulate AI processing with knowledge base search
+                setTimeout(() => {
+                    const response = searchKnowledgeBase(aiQuery);
+                    setAiResponse(response);
+                    setAiLoading(false);
+                }, 1500);
+            };
+
+            const searchKnowledgeBase = (query) => {
+                const lowerQuery = query.toLowerCase();
+                let relevantContent = {
+                    capabilities: [],
+                    caseStudies: [],
+                    kpis: [],
+                    answer: ''
+                };
+
+                // Search capabilities
+                knowledgeBase.capabilities.forEach(cap => {
+                    const score = calculateRelevance(lowerQuery, cap);
+                    if (score > 0) {
+                        relevantContent.capabilities.push({ ...cap, score });
+                    }
+                });
+
+                // Search case studies
+                knowledgeBase.caseStudies.forEach(cs => {
+                    const score = calculateRelevance(lowerQuery, cs);
+                    if (score > 0) {
+                        relevantContent.caseStudies.push({ ...cs, score });
+                    }
+                });
+
+                // Sort by relevance
+                relevantContent.capabilities.sort((a, b) => b.score - a.score);
+                relevantContent.caseStudies.sort((a, b) => b.score - a.score);
+
+                // Generate answer
+                relevantContent.answer = generateAnswer(lowerQuery, relevantContent);
+
+                return relevantContent;
+            };
+
+            const calculateRelevance = (query, item) => {
+                let score = 0;
+                const searchText = JSON.stringify(item).toLowerCase();
+
+                // Keyword matching
+                const keywords = query.split(' ').filter(w => w.length > 3);
+                keywords.forEach(keyword => {
+                    if (searchText.includes(keyword)) {
+                        score += 10;
+                    }
+                });
+
+                return score;
+            };
+
+            const generateAnswer = (query, content) => {
+                // Simple answer generation based on query patterns
+                if (query.includes('media') || query.includes('advertising') || query.includes('roas')) {
+                    return `CPGIO's media framework achieves 5-8x ROAS through data-driven strategies. We target new-to-brand shoppers and optimize campaigns using Amazon Marketing Cloud (AMC) and Pacvue. Notable results include SOLA (7-8x ROAS, $20K → $800K/month) and Bob's Red Mill (5.53x ROAS with 29% new-to-brand orders).`;
+                } else if (query.includes('fulfillment') || query.includes('warehouse') || query.includes('shipping')) {
+                    return `CPGIO offers high-volume fulfillment with peak velocity of 48,000 units/hour and surge capacity of 200,000 units/month. We maintain <0.01% defect rates even at peak volume, supporting FBA, FBM, and hybrid 3P/1P operations with co-packing and kitting capabilities.`;
+                } else if (query.includes('brand protection') || query.includes('unauthorized') || query.includes('sellers')) {
+                    return `CPGIO's brand protection strategy has removed 56 unauthorized sellers in a single campaign, recovering $526K in monthly revenue and 28,608 units. We use Amazon Transparency, IP enforcement, MAP-aligned pricing, and systematic seller containment with <24 hour response time to new violations.`;
+                } else if (query.includes('3pl') || query.includes('distribution') || query.includes('model')) {
+                    return `CPGIO offers both 3PL (performance-based service) and Distribution (vendor-of-record) models using the same operational engine. The choice depends on brand maturity and control preferences, not capability. 3PL offers transparent billing and strategic control, while Distribution provides maximum speed and risk transfer.`;
+                } else if (query.includes('growth') || query.includes('scale') || query.includes('revenue')) {
+                    return `CPGIO delivers proven growth results: SOLA scaled from $20K to $800K/month in 18 months, an $8B consumer goods company reached $1M/month, and BFY snack portfolio grew 267% ($71K → $261K monthly). Our data-driven ASIN prioritization and integrated operations drive sustainable scaling.`;
+                } else {
+                    return `Based on your question, I found ${content.capabilities.length} relevant capabilities and ${content.caseStudies.length} case studies. CPGIO's systems-first approach integrates forecasting, fulfillment, content, media, and customer operations into a unified engine. Key strengths include 5-8x ROAS, 48K units/hour fulfillment velocity, and proven brand protection.`;
+                }
+            };
+
+            return (
+                <div className="page-content">
+                    <div className="page-header">
+                        <h1 className="page-title">AI-Powered Q&A</h1>
+                        <p className="page-subtitle">
+                            Ask questions about CPGIO's capabilities, performance, and approach.
+                            Get intelligent answers drawn from our complete knowledge base.
+                        </p>
+                    </div>
+
+                    <div className="ai-qa-container">
+                        <div className="qa-input-section">
+                            <textarea
+                                className="qa-textarea"
+                                placeholder="Ask anything about CPGIO's capabilities, services, performance, case studies, or approach..."
+                                value={aiQuery}
+                                onChange={(e) => setAiQuery(e.target.value)}
+                                rows="4"
+                            />
+                            <button
+                                className="qa-submit-button"
+                                onClick={handleAskQuestion}
+                                disabled={aiLoading || !aiQuery.trim()}
+                            >
+                                {aiLoading ? 'Searching knowledge base...' : 'Ask Question'}
+                            </button>
+                        </div>
+
+                        {aiResponse && (
+                            <div className="qa-response-section">
+                                <div className="qa-answer">
+                                    <h3 className="qa-section-title">Answer</h3>
+                                    <p className="qa-answer-text">{aiResponse.answer}</p>
+                                </div>
+
+                                {aiResponse.capabilities.length > 0 && (
+                                    <div className="qa-references">
+                                        <h3 className="qa-section-title">Related Capabilities</h3>
+                                        <div className="qa-ref-list">
+                                            {aiResponse.capabilities.slice(0, 3).map(cap => (
+                                                <div key={cap.id} className="qa-ref-card">
+                                                    <h4 className="qa-ref-title">{cap.title}</h4>
+                                                    <p className="qa-ref-description">{cap.description}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {aiResponse.caseStudies.length > 0 && (
+                                    <div className="qa-references">
+                                        <h3 className="qa-section-title">Related Case Studies</h3>
+                                        <div className="qa-ref-list">
+                                            {aiResponse.caseStudies.slice(0, 3).map(cs => (
+                                                <div key={cs.id} className="qa-ref-card">
+                                                    <h4 className="qa-ref-title">{cs.title}</h4>
+                                                    <p className="qa-ref-brand">{cs.brand}</p>
+                                                    <p className="qa-ref-description">{cs.challenge}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        <div className="qa-suggestions">
+                            <h3 className="qa-section-title">Suggested Questions</h3>
+                            <div className="suggestion-chips">
+                                <button className="suggestion-chip" onClick={() => setAiQuery("What is CPGIO's media performance?")}>
+                                    What is CPGIO's media performance?
+                                </button>
+                                <button className="suggestion-chip" onClick={() => setAiQuery("How does brand protection work?")}>
+                                    How does brand protection work?
+                                </button>
+                                <button className="suggestion-chip" onClick={() => setAiQuery("What are your fulfillment capabilities?")}>
+                                    What are your fulfillment capabilities?
+                                </button>
+                                <button className="suggestion-chip" onClick={() => setAiQuery("Explain the 3PL vs Distribution model")}>
+                                    Explain 3PL vs Distribution
+                                </button>
+                                <button className="suggestion-chip" onClick={() => setAiQuery("Show me growth case studies")}>
+                                    Show me growth case studies
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // RFP Analyzer Page Component
+        function RFPAnalyzerPage({ uploadedRFP, setUploadedRFP }) {
+            const fileInputRef = useRef(null);
+
+            const handleFileUpload = (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+
+                        // Parse the workbook
+                        const parsedData = parseRFPWorkbook(workbook);
+                        setUploadedRFP({
+                            fileName: file.name,
+                            data: parsedData,
+                            uploadDate: new Date()
+                        });
+                    } catch (error) {
+                        console.error('Error parsing Excel file:', error);
+                        alert('Error parsing Excel file. Please ensure it\'s a valid RFP format.');
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            };
+
+            const parseRFPWorkbook = (workbook) => {
+                const questions = [];
+
+                // Iterate through sheets
+                workbook.SheetNames.forEach(sheetName => {
+                    const sheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                    // Look for question patterns
+                    jsonData.forEach((row, rowIndex) => {
+                        row.forEach((cell, colIndex) => {
+                            if (cell && typeof cell === 'string') {
+                                // Detect if cell contains a question
+                                if (cell.includes('?') || cell.toLowerCase().includes('describe') ||
+                                    cell.toLowerCase().includes('explain') || cell.toLowerCase().includes('provide')) {
+                                    questions.push({
+                                        id: `q-${questions.length + 1}`,
+                                        sheet: sheetName,
+                                        row: rowIndex + 1,
+                                        col: colIndex + 1,
+                                        question: cell,
+                                        category: categorizeQuestion(cell),
+                                        suggestedResponse: generateSuggestedResponse(cell),
+                                        response: ''
+                                    });
+                                }
+                            }
+                        });
+                    });
+                });
+
+                return { questions };
+            };
+
+            const categorizeQuestion = (question) => {
+                const lowerQ = question.toLowerCase();
+                if (lowerQ.includes('price') || lowerQ.includes('fee') || lowerQ.includes('cost')) return 'Pricing';
+                if (lowerQ.includes('media') || lowerQ.includes('advertising') || lowerQ.includes('marketing')) return 'Media';
+                if (lowerQ.includes('fulfillment') || lowerQ.includes('warehouse') || lowerQ.includes('shipping')) return 'Fulfillment';
+                if (lowerQ.includes('brand protection') || lowerQ.includes('unauthorized')) return 'Brand Protection';
+                if (lowerQ.includes('case study') || lowerQ.includes('example') || lowerQ.includes('reference')) return 'Case Studies';
+                if (lowerQ.includes('technology') || lowerQ.includes('system') || lowerQ.includes('platform')) return 'Technology';
+                if (lowerQ.includes('experience') || lowerQ.includes('background') || lowerQ.includes('history')) return 'Company Overview';
+                return 'General';
+            };
+
+            const generateSuggestedResponse = (question) => {
+                const category = categorizeQuestion(question);
+                const suggestions = {
+                    'Pricing': 'Reference: Financial Models Framework - 3PL vs Distribution comparison',
+                    'Media': 'Reference: Media Framework + Case Studies (SOLA, Bob\'s Red Mill)',
+                    'Fulfillment': 'Reference: Fulfillment Excellence capability + Influencer Spice case study',
+                    'Brand Protection': 'Reference: Brand Protection capability + Mason Jar case study',
+                    'Case Studies': 'Reference: Browse Case Studies section for relevant examples',
+                    'Technology': 'Reference: HyperQue system + Integrated Operations capability',
+                    'Company Overview': 'Reference: About CPGIO + Core Philosophy',
+                    'General': 'Search knowledge base for relevant content'
+                };
+                return suggestions[category] || suggestions['General'];
+            };
+
+            const downloadFormattedRFP = () => {
+                if (!uploadedRFP) return;
+
+                // Create new workbook with formatted responses
+                const wb = XLSX.utils.book_new();
+
+                // Create responses sheet
+                const responsesData = [
+                    ['Question #', 'Sheet', 'Row', 'Question', 'Category', 'CPGIO Response', 'Suggested Reference']
+                ];
+
+                uploadedRFP.data.questions.forEach((q, idx) => {
+                    responsesData.push([
+                        idx + 1,
+                        q.sheet,
+                        q.row,
+                        q.question,
+                        q.category,
+                        q.response || '[Add your response here]',
+                        q.suggestedResponse
+                    ]);
+                });
+
+                const ws = XLSX.utils.aoa_to_sheet(responsesData);
+                XLSX.utils.book_append_sheet(wb, ws, 'CPGIO Responses');
+
+                // Download
+                XLSX.writeFile(wb, `CPGIO_RFP_Response_${new Date().toISOString().split('T')[0]}.xlsx`);
+            };
+
+            const updateResponse = (questionId, newResponse) => {
+                setUploadedRFP(prev => ({
+                    ...prev,
+                    data: {
+                        ...prev.data,
+                        questions: prev.data.questions.map(q =>
+                            q.id === questionId ? { ...q, response: newResponse } : q
+                        )
+                    }
+                }));
+            };
+
+            return (
+                <div className="page-content">
+                    <div className="page-header">
+                        <h1 className="page-title">RFP Analyzer</h1>
+                        <p className="page-subtitle">
+                            Upload Excel RFPs for intelligent analysis. Automatically extract questions,
+                            categorize them, and get suggested knowledge base references for streamlined responses.
+                        </p>
+                    </div>
+
+                    {!uploadedRFP ? (
+                        <div className="upload-section">
+                            <div className="upload-box" onClick={() => fileInputRef.current?.click()}>
+                                <div className="upload-icon">📤</div>
+                                <h3 className="upload-title">Upload RFP Excel File</h3>
+                                <p className="upload-description">
+                                    Click to browse or drag and drop your RFP file here
+                                </p>
+                                <p className="upload-formats">Supports .xlsx, .xls</p>
+                            </div>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept=".xlsx,.xls"
+                                onChange={handleFileUpload}
+                                style={{ display: 'none' }}
+                            />
+
+                            <div className="feature-list">
+                                <h3 className="section-title">What This Tool Does</h3>
+                                <ul className="features">
+                                    <li>✓ Automatically extracts questions from Excel RFPs</li>
+                                    <li>✓ Categorizes questions (Pricing, Media, Fulfillment, etc.)</li>
+                                    <li>✓ Suggests relevant knowledge base references</li>
+                                    <li>✓ Provides formatted response template</li>
+                                    <li>✓ Exports completed responses back to Excel</li>
+                                </ul>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="rfp-analysis">
+                            <div className="rfp-header">
+                                <div className="rfp-info">
+                                    <h3 className="rfp-filename">{uploadedRFP.fileName}</h3>
+                                    <p className="rfp-stats">
+                                        {uploadedRFP.data.questions.length} questions detected
+                                    </p>
+                                </div>
+                                <div className="rfp-actions">
+                                    <button className="secondary-button" onClick={() => setUploadedRFP(null)}>
+                                        Upload New RFP
+                                    </button>
+                                    <button className="primary-button" onClick={downloadFormattedRFP}>
+                                        Download Response Template
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="questions-list">
+                                {uploadedRFP.data.questions.map((q, idx) => (
+                                    <div key={q.id} className="question-card">
+                                        <div className="question-header">
+                                            <div className="question-number">Q{idx + 1}</div>
+                                            <div className="question-category-badge">{q.category}</div>
+                                            <div className="question-location">
+                                                Sheet: {q.sheet} | Row: {q.row}
+                                            </div>
+                                        </div>
+                                        <div className="question-text">{q.question}</div>
+                                        <div className="question-suggestion">
+                                            <strong>💡 Suggested Reference:</strong> {q.suggestedResponse}
+                                        </div>
+                                        <textarea
+                                            className="response-textarea"
+                                            placeholder="Type your response here..."
+                                            value={q.response}
+                                            onChange={(e) => updateResponse(q.id, e.target.value)}
+                                            rows="3"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Frameworks Page Component
+        function FrameworksPage({ searchQuery }) {
+            return (
+                <div className="page-content">
+                    <div className="page-header">
+                        <h1 className="page-title">Strategic Frameworks</h1>
+                        <p className="page-subtitle">
+                            Core methodologies and approaches that guide CPGIO's operations and strategy.
+                        </p>
+                    </div>
+
+                    <div className="framework-section">
+                        <h2 className="framework-title">{knowledgeBase.frameworks.financialModels.title}</h2>
+                        <div className="framework-philosophy">
+                            <em>"{knowledgeBase.frameworks.financialModels.philosophy}"</em>
+                        </div>
+                        <p className="framework-description">{knowledgeBase.frameworks.financialModels.description}</p>
+
+                        <div className="models-comparison">
+                            {knowledgeBase.frameworks.financialModels.models.map((model, idx) => (
+                                <div key={idx} className="model-card">
+                                    <h3 className="model-name">{model.name}</h3>
+                                    <p className="model-description">{model.description}</p>
+                                    <ul className="model-benefits">
+                                        {model.benefits.map((benefit, bidx) => (
+                                            <li key={bidx}>{benefit}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="framework-insight">
+                            <strong>Key Insight:</strong> {knowledgeBase.frameworks.financialModels.keyInsight}
+                        </div>
+                    </div>
+
+                    <div className="framework-section">
+                        <h2 className="framework-title">{knowledgeBase.frameworks.gtmApproach.title}</h2>
+                        <p className="framework-description">{knowledgeBase.frameworks.gtmApproach.description}</p>
+
+                        {knowledgeBase.frameworks.gtmApproach.components.map((component, idx) => (
+                            <div key={idx} className="framework-component">
+                                <h3 className="component-name">{component.name}</h3>
+                                <ul className="component-list">
+                                    {(component.criteria || component.steps || component.approach || component.methods).map((item, iidx) => (
+                                        <li key={iidx}>{item}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
