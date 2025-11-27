@@ -809,27 +809,42 @@
 
             const parseRFPWorkbook = (workbook) => {
                 const questions = [];
+                const seenQuestions = new Set(); // Avoid duplicates
 
                 // Iterate through sheets
                 workbook.SheetNames.forEach(sheetName => {
                     const sheet = workbook.Sheets[sheetName];
                     const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
+                    // Try to detect header rows and question columns
+                    const detectedFormat = detectRFPFormat(jsonData);
+
                     // Look for question patterns
                     jsonData.forEach((row, rowIndex) => {
+                        // Skip likely header rows
+                        if (rowIndex === 0 && isLikelyHeaderRow(row)) return;
+
                         row.forEach((cell, colIndex) => {
                             if (cell && typeof cell === 'string') {
-                                // Detect if cell contains a question
-                                if (cell.includes('?') || cell.toLowerCase().includes('describe') ||
-                                    cell.toLowerCase().includes('explain') || cell.toLowerCase().includes('provide')) {
+                                const trimmedCell = cell.trim();
+
+                                // Skip very short cells or obvious non-questions
+                                if (trimmedCell.length < 10) return;
+                                if (isLikelyNonQuestion(trimmedCell)) return;
+
+                                // Enhanced question detection
+                                const isQuestion = detectIfQuestion(trimmedCell);
+
+                                if (isQuestion && !seenQuestions.has(trimmedCell)) {
+                                    seenQuestions.add(trimmedCell);
                                     questions.push({
                                         id: `q-${questions.length + 1}`,
                                         sheet: sheetName,
                                         row: rowIndex + 1,
                                         col: colIndex + 1,
-                                        question: cell,
-                                        category: categorizeQuestion(cell),
-                                        suggestedResponse: generateSuggestedResponse(cell),
+                                        question: trimmedCell,
+                                        category: categorizeQuestion(trimmedCell),
+                                        suggestedResponse: generateSuggestedResponse(trimmedCell),
                                         response: ''
                                     });
                                 }
@@ -841,15 +856,143 @@
                 return { questions };
             };
 
+            // Detect if a row is likely a header row
+            const isLikelyHeaderRow = (row) => {
+                if (!row || row.length === 0) return false;
+                const headerKeywords = ['question', 'requirement', 'response', 'vendor', 'answer', 'description', 'section', 'category', 'item', '#'];
+                const rowText = row.join(' ').toLowerCase();
+                return headerKeywords.some(keyword => rowText.includes(keyword)) && row.join('').length < 100;
+            };
+
+            // Detect if text is likely not a question
+            const isLikelyNonQuestion = (text) => {
+                const lower = text.toLowerCase();
+                // Skip navigation, labels, or instructions
+                if (lower.match(/^(section|part|page|tab|sheet|column|row)\s*\d/)) return true;
+                if (lower.match(/^(note|instruction|example|total|subtotal|yes|no)s?[:]/)) return true;
+                // Skip dates and numbers
+                if (lower.match(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/)) return true;
+                if (lower.match(/^[\d,.$]+$/)) return true;
+                return false;
+            };
+
+            // Enhanced question detection using multiple patterns
+            const detectIfQuestion = (text) => {
+                const lower = text.toLowerCase();
+
+                // Question mark detection
+                if (text.includes('?')) return true;
+
+                // Imperative verbs commonly used in RFPs
+                const imperativeVerbs = [
+                    'describe', 'explain', 'provide', 'list', 'detail', 'outline',
+                    'identify', 'specify', 'indicate', 'state', 'demonstrate',
+                    'confirm', 'verify', 'submit', 'include', 'attach', 'present',
+                    'discuss', 'address', 'define', 'clarify', 'elaborate'
+                ];
+
+                // Interrogative words
+                const interrogatives = [
+                    'how', 'what', 'when', 'where', 'why', 'which', 'who',
+                    'does', 'do', 'can', 'will', 'would', 'could', 'should',
+                    'is', 'are', 'have', 'has'
+                ];
+
+                // Check for imperative verbs at start of sentence
+                const words = lower.split(/\s+/);
+                if (words.length > 3 && imperativeVerbs.some(verb => words[0] === verb)) {
+                    return true;
+                }
+
+                // Check for interrogatives at start
+                if (interrogatives.some(word => words[0] === word)) {
+                    return true;
+                }
+
+                // Check for "please" followed by imperative
+                if (lower.startsWith('please') && imperativeVerbs.some(verb => lower.includes(verb))) {
+                    return true;
+                }
+
+                // RFP-specific patterns
+                if (lower.match(/^(vendor|bidder|proposer|contractor|supplier)\s+(must|shall|should|will)/)) {
+                    return true;
+                }
+
+                // Requirement patterns
+                if (lower.match(/(requirement|mandatory|required|must|shall).*[:]/)) {
+                    return true;
+                }
+
+                return false;
+            };
+
+            // Detect RFP format structure
+            const detectRFPFormat = (jsonData) => {
+                // This could be expanded to detect:
+                // - Column-based format (questions in one column, responses in another)
+                // - Row-based format (question per row)
+                // - Hierarchical format (sections with sub-questions)
+                // - Table format with merged cells
+
+                // For now, return basic detection
+                return {
+                    type: 'standard',
+                    hasHeaders: jsonData.length > 0 && isLikelyHeaderRow(jsonData[0])
+                };
+            };
+
             const categorizeQuestion = (question) => {
                 const lowerQ = question.toLowerCase();
-                if (lowerQ.includes('price') || lowerQ.includes('fee') || lowerQ.includes('cost')) return 'Pricing';
-                if (lowerQ.includes('media') || lowerQ.includes('advertising') || lowerQ.includes('marketing')) return 'Media';
-                if (lowerQ.includes('fulfillment') || lowerQ.includes('warehouse') || lowerQ.includes('shipping')) return 'Fulfillment';
-                if (lowerQ.includes('brand protection') || lowerQ.includes('unauthorized')) return 'Brand Protection';
-                if (lowerQ.includes('case study') || lowerQ.includes('example') || lowerQ.includes('reference')) return 'Case Studies';
-                if (lowerQ.includes('technology') || lowerQ.includes('system') || lowerQ.includes('platform')) return 'Technology';
-                if (lowerQ.includes('experience') || lowerQ.includes('background') || lowerQ.includes('history')) return 'Company Overview';
+
+                // Pricing & Financial
+                const pricingKeywords = ['price', 'pricing', 'fee', 'cost', 'rate', 'budget', 'payment', 'invoice', 'billing', 'charge', 'financial', 'revenue share', 'commission'];
+                if (pricingKeywords.some(kw => lowerQ.includes(kw))) return 'Pricing';
+
+                // Media & Advertising
+                const mediaKeywords = ['media', 'advertising', 'marketing', 'roas', 'acos', 'tacos', 'ppc', 'campaign', 'ad spend', 'amazon advertising', 'sponsored', 'dsp'];
+                if (mediaKeywords.some(kw => lowerQ.includes(kw))) return 'Media';
+
+                // Fulfillment & Logistics
+                const fulfillmentKeywords = ['fulfillment', 'warehouse', 'warehousing', 'shipping', 'logistics', 'fba', 'fbm', '3pl', 'inventory', 'storage', 'distribution', 'receiving', 'picking', 'packing', 'kitting', 'co-pack'];
+                if (fulfillmentKeywords.some(kw => lowerQ.includes(kw))) return 'Fulfillment';
+
+                // Brand Protection
+                const brandProtectionKeywords = ['brand protection', 'unauthorized', 'map pricing', 'counterfeit', 'ip enforcement', 'trademark', 'seller removal', 'transparency', 'gray market'];
+                if (brandProtectionKeywords.some(kw => lowerQ.includes(kw))) return 'Brand Protection';
+
+                // Technology & Systems
+                const technologyKeywords = ['technology', 'tech stack', 'system', 'platform', 'software', 'integration', 'api', 'automation', 'tool', 'dashboard', 'reporting', 'analytics', 'data'];
+                if (technologyKeywords.some(kw => lowerQ.includes(kw))) return 'Technology';
+
+                // Customer Service & Support
+                const supportKeywords = ['customer service', 'customer support', 'response time', 'support hours', 'helpdesk', 'ticket', 'escalation', 'sla'];
+                if (supportKeywords.some(kw => lowerQ.includes(kw))) return 'Customer Support';
+
+                // Compliance & Certifications
+                const complianceKeywords = ['compliance', 'certification', 'iso', 'soc', 'audit', 'regulation', 'gdpr', 'ccpa', 'privacy', 'security', 'insurance'];
+                if (complianceKeywords.some(kw => lowerQ.includes(kw))) return 'Compliance';
+
+                // Case Studies & References
+                const caseStudyKeywords = ['case study', 'case studies', 'example', 'reference', 'client', 'portfolio', 'previous work', 'past experience'];
+                if (caseStudyKeywords.some(kw => lowerQ.includes(kw))) return 'Case Studies';
+
+                // Company Overview & Experience
+                const companyKeywords = ['company', 'organization', 'experience', 'background', 'history', 'founded', 'team', 'staff', 'employee', 'year', 'about'];
+                if (companyKeywords.some(kw => lowerQ.includes(kw))) return 'Company Overview';
+
+                // Product & Catalog Management
+                const productKeywords = ['product', 'catalog', 'asin', 'sku', 'listing', 'content', 'image', 'photography', 'a+ content', 'enhanced brand content'];
+                if (productKeywords.some(kw => lowerQ.includes(kw))) return 'Product Management';
+
+                // Growth & Strategy
+                const growthKeywords = ['growth', 'strategy', 'expansion', 'scaling', 'international', 'marketplace', 'channel', 'sales'];
+                if (growthKeywords.some(kw => lowerQ.includes(kw))) return 'Growth Strategy';
+
+                // Omnichannel & Retail
+                const omnichannelKeywords = ['omnichannel', 'retail', 'walmart', 'target', 'costco', 'brick and mortar', 'b2b', 'wholesale'];
+                if (omnichannelKeywords.some(kw => lowerQ.includes(kw))) return 'Omnichannel';
+
                 return 'General';
             };
 
@@ -857,13 +1000,18 @@
                 const category = categorizeQuestion(question);
                 const suggestions = {
                     'Pricing': 'Reference: Financial Models Framework - 3PL vs Distribution comparison',
-                    'Media': 'Reference: Media Framework + Case Studies (SOLA, Bob\'s Red Mill)',
-                    'Fulfillment': 'Reference: Fulfillment Excellence capability + Influencer Spice case study',
-                    'Brand Protection': 'Reference: Brand Protection capability + Mason Jar case study',
-                    'Case Studies': 'Reference: Browse Case Studies section for relevant examples',
-                    'Technology': 'Reference: HyperQue system + Integrated Operations capability',
-                    'Company Overview': 'Reference: About CPGIO + Core Philosophy',
-                    'General': 'Search knowledge base for relevant content'
+                    'Media': 'Reference: Media Framework + Case Studies (SOLA 7-8x ROAS, Bob\'s Red Mill 5.53x ROAS)',
+                    'Fulfillment': 'Reference: Fulfillment Excellence capability (48K units/hr, <0.01% defect) + Influencer Spice case study',
+                    'Brand Protection': 'Reference: Brand Protection capability (56 sellers removed, $526K recovery) + Mason Jar case study',
+                    'Technology': 'Reference: HyperQue system + Integrated Operations capability + Forecasting accuracy',
+                    'Customer Support': 'Reference: Customer Operations capability + Response times + Support structure',
+                    'Compliance': 'Reference: Compliance & certifications section + Security protocols + Insurance coverage',
+                    'Case Studies': 'Reference: Browse Case Studies section - 20+ examples across 8 categories',
+                    'Company Overview': 'Reference: About CPGIO + Core Philosophy + Team structure + Years in business',
+                    'Product Management': 'Reference: ASIN Prioritization + Content Optimization + 800+ ASINs launched',
+                    'Growth Strategy': 'Reference: Portfolio Growth case studies (267% growth examples) + Go-To-Market approach',
+                    'Omnichannel': 'Reference: Omnichannel Orchestration capability + Retail expansion case studies',
+                    'General': 'Search knowledge base for relevant content across all capabilities'
                 };
                 return suggestions[category] || suggestions['General'];
             };
