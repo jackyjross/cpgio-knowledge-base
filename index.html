@@ -51,7 +51,8 @@
                 'shield': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
                 'rocket': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>',
                 'users': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-                'book': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'
+                'book': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+                'chevron-down': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>'
             };
 
             const svg = iconMap[name] || iconMap['home'];
@@ -638,6 +639,8 @@
 
         // Case Studies Page Component
         function CaseStudiesPage({ selectedCaseStudy, setSelectedCaseStudy, searchQuery }) {
+            const [expandedCase, setExpandedCase] = useState(null);
+
             const filteredCaseStudies = knowledgeBase.caseStudies.filter(cs =>
                 cs.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 cs.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -650,6 +653,10 @@
             }
 
             const categories = [...new Set(knowledgeBase.caseStudies.map(c => c.category))];
+
+            const toggleCase = (caseId) => {
+                setExpandedCase(expandedCase === caseId ? null : caseId);
+            };
 
             return (
                 <div className="page-content">
@@ -668,30 +675,65 @@
                         return (
                             <div key={category} className="case-study-category">
                                 <h2 className="category-title">{category}</h2>
-                                <div className="case-study-list">
-                                    {casesInCategory.map(cs => (
-                                        <div
-                                            key={cs.id}
-                                            className="case-study-card"
-                                            onClick={() => setSelectedCaseStudy(cs.id)}
-                                        >
-                                            <h3 className="case-study-title">{cs.title}</h3>
-                                            <p className="case-study-brand">{cs.brand}</p>
-                                            <p className="case-study-challenge"><strong>Challenge:</strong> {cs.challenge}</p>
-
-                                            <div className="results-preview">
-                                                {Object.entries(cs.results).slice(0, 2).map(([key, value]) => (
-                                                    <div key={key} className="result-item">
-                                                        <span className="result-value">{value}</span>
+                                <div className="accordion-container">
+                                    {casesInCategory.map(cs => {
+                                        const isExpanded = expandedCase === cs.id;
+                                        return (
+                                            <div key={cs.id} className="accordion-item">
+                                                <button
+                                                    className="accordion-trigger"
+                                                    onClick={() => toggleCase(cs.id)}
+                                                >
+                                                    <div className="accordion-header-content">
+                                                        <div>
+                                                            <h3 className="accordion-title">{cs.brand}</h3>
+                                                            <p className="accordion-subtitle">{cs.title}</p>
+                                                        </div>
+                                                        <div className="accordion-stats">
+                                                            {Object.entries(cs.results).slice(0, 2).map(([key, value], idx) => (
+                                                                <span key={idx} className="stat-pill">{value}</span>
+                                                            ))}
+                                                        </div>
                                                     </div>
-                                                ))}
-                                            </div>
+                                                    <span className={`accordion-chevron ${isExpanded ? 'expanded' : ''}`}>
+                                                        <Icon name="chevron-down" size={20} />
+                                                    </span>
+                                                </button>
 
-                                            <div className="card-footer">
-                                                <span className="view-details">Read full case study →</span>
+                                                {isExpanded && (
+                                                    <div className="accordion-content">
+                                                        <div className="accordion-section">
+                                                            <h4 className="accordion-section-title">Challenge</h4>
+                                                            <p className="accordion-text">{cs.challenge}</p>
+                                                        </div>
+
+                                                        <div className="accordion-section">
+                                                            <h4 className="accordion-section-title">Execution</h4>
+                                                            <ul className="accordion-list">
+                                                                {cs.execution.map((item, idx) => (
+                                                                    <li key={idx}>{item}</li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+
+                                                        <div className="accordion-section">
+                                                            <h4 className="accordion-section-title">Results</h4>
+                                                            <div className="results-grid-compact">
+                                                                {Object.entries(cs.results).map(([key, value]) => (
+                                                                    <div key={key} className="result-item-compact">
+                                                                        <div className="result-value-compact">{value}</div>
+                                                                        <div className="result-label-compact">
+                                                                            {key.replace(/([A-Z])/g, ' $1').trim()}
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
                         );
