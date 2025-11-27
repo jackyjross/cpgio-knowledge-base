@@ -1,6 +1,81 @@
 // CPGIO Knowledge Base Data Structure
 // Organized by capabilities, service KPIs, and case studies
 
+/**
+ * @typedef {Object} KPI
+ * @property {string} metric - The KPI metric name
+ * @property {string} value - The KPI value
+ * @property {string} description - Description of the KPI
+ */
+
+/**
+ * @typedef {Object} Capability
+ * @property {string} id - Unique identifier for the capability
+ * @property {string} title - Display title
+ * @property {string} category - Category grouping
+ * @property {string} pillar - Strategic pillar assignment
+ * @property {string} description - Brief description
+ * @property {string[]} keyPoints - Key strategic points
+ * @property {KPI[]} kpis - Service-level KPIs
+ * @property {string[]} relatedCaseStudies - IDs of related case studies
+ */
+
+/**
+ * @typedef {Object} CaseStudy
+ * @property {string} id - Unique identifier
+ * @property {string} brand - Brand name
+ * @property {string} category - Industry category
+ * @property {string} challenge - Business challenge description
+ * @property {string[]} execution - Steps taken to solve the challenge
+ * @property {Object.<string, string>} results - Quantified results
+ * @property {string[]} relatedCapabilities - IDs of related capabilities
+ */
+
+/**
+ * @typedef {Object} RFPAnswer
+ * @property {string} question - The RFP question
+ * @property {string} answer - Comprehensive answer with metrics
+ * @property {string} relatedCapabilityId - ID of related capability
+ * @property {string[]} tags - Categorization tags
+ */
+
+/**
+ * @typedef {Object} GlossaryTerm
+ * @property {string} term - The term name
+ * @property {string} definition - Official definition
+ * @property {string} category - Category (Amazon, eCommerce, Logistics)
+ * @property {string} cpgioContext - CPGIO-specific context and application
+ */
+
+/**
+ * @typedef {Object} TeamMember
+ * @property {string} name - Team member name
+ * @property {string} role - Job title/role
+ * @property {string} bio - Professional biography
+ * @property {string} expertise - Areas of expertise
+ * @property {string} photo - Photo URL or placeholder
+ */
+
+/**
+ * @typedef {Object} ProcessStep
+ * @property {number} step - Step number
+ * @property {string} title - Step title
+ * @property {string} description - Step description
+ * @property {string} icon - Icon name for display
+ */
+
+/**
+ * @typedef {Object} KnowledgeBase
+ * @property {Capability[]} capabilities - All capabilities
+ * @property {CaseStudy[]} caseStudies - All case studies
+ * @property {Object.<string, Object.<string, KPI>>} serviceKPIs - KPIs by category
+ * @property {RFPAnswer[]} rfpAnswers - Common RFP questions and answers
+ * @property {GlossaryTerm[]} glossary - eCommerce terminology
+ * @property {TeamMember[]} team - Team member profiles
+ * @property {ProcessStep[]} process - Engagement process steps
+ */
+
+/** @type {KnowledgeBase} */
 const knowledgeBase = {
   capabilities: [
     {

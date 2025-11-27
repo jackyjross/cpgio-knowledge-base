@@ -3,15 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary Meta Tags -->
     <title>CPGIO Knowledge Base | Capabilities, KPIs & RFP Intelligence</title>
+    <meta name="title" content="CPGIO Knowledge Base | Capabilities, KPIs & RFP Intelligence">
+    <meta name="description" content="Explore CPGIO's proven eCommerce capabilities: 48K units/hr fulfillment, 5-8x ROAS media performance, brand protection, and integrated operations. Access RFP answers, case studies, and service-level KPIs.">
+    <meta name="keywords" content="Amazon FBA, 3PL, eCommerce fulfillment, retail media, brand protection, marketplace operations, ROAS, Amazon advertising">
+    <meta name="author" content="CPGIO">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jackyjross.github.io/cpgio-knowledge-base/">
+    <meta property="og:title" content="CPGIO Knowledge Base | Capabilities, KPIs & RFP Intelligence">
+    <meta property="og:description" content="Explore CPGIO's proven eCommerce capabilities: 48K units/hr fulfillment, 5-8x ROAS media performance, brand protection, and integrated operations.">
+    <meta property="og:image" content="https://jackyjross.github.io/cpgio-knowledge-base/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://jackyjross.github.io/cpgio-knowledge-base/">
+    <meta property="twitter:title" content="CPGIO Knowledge Base | Capabilities, KPIs & RFP Intelligence">
+    <meta property="twitter:description" content="Explore CPGIO's proven eCommerce capabilities: 48K units/hr fulfillment, 5-8x ROAS media performance, brand protection, and integrated operations.">
+    <meta property="twitter:image" content="https://jackyjross.github.io/cpgio-knowledge-base/og-image.png">
 
     <!-- React and ReactDOM via CDN -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <!-- SheetJS for Excel parsing -->
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 
     <!-- Styles -->
     <link rel="stylesheet" href="styles-modern.css">
@@ -31,6 +48,23 @@
     <!-- Main Application -->
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
+
+        // Lazy load script utility
+        const loadScript = (src) => {
+            return new Promise((resolve, reject) => {
+                // Check if script already loaded
+                if (document.querySelector(`script[src="${src}"]`)) {
+                    resolve();
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = () => resolve();
+                script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+                document.head.appendChild(script);
+            });
+        };
 
         // Icon helper function
         const Icon = ({ name, size = 20, strokeWidth = 2, ...props }) => {
@@ -1084,16 +1118,33 @@
         // RFP Analyzer Page Component
         function RFPAnalyzerPage({ uploadedRFP, setUploadedRFP }) {
             const fileInputRef = useRef(null);
+            const [xlsxLoaded, setXlsxLoaded] = useState(false);
+            const [xlsxLoading, setXlsxLoading] = useState(false);
 
-            const handleFileUpload = (event) => {
+            const handleFileUpload = async (event) => {
                 const file = event.target.files[0];
                 if (!file) return;
+
+                // Lazy load SheetJS library if not already loaded
+                if (!xlsxLoaded && !window.XLSX) {
+                    setXlsxLoading(true);
+                    try {
+                        await loadScript('https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js');
+                        setXlsxLoaded(true);
+                    } catch (error) {
+                        console.error('Failed to load Excel library:', error);
+                        alert('Failed to load Excel parsing library. Please try again.');
+                        setXlsxLoading(false);
+                        return;
+                    }
+                    setXlsxLoading(false);
+                }
 
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     try {
                         const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, { type: 'array' });
+                        const workbook = window.XLSX.read(data, { type: 'array' });
 
                         // Parse the workbook
                         const parsedData = parseRFPWorkbook(workbook);
@@ -1117,7 +1168,7 @@
                 // Iterate through sheets
                 workbook.SheetNames.forEach(sheetName => {
                     const sheet = workbook.Sheets[sheetName];
-                    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                    const jsonData = window.XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
                     // Try to detect header rows and question columns
                     const detectedFormat = detectRFPFormat(jsonData);
@@ -1320,10 +1371,10 @@
             };
 
             const downloadFormattedRFP = () => {
-                if (!uploadedRFP) return;
+                if (!uploadedRFP || !window.XLSX) return;
 
                 // Create new workbook with formatted responses
-                const wb = XLSX.utils.book_new();
+                const wb = window.XLSX.utils.book_new();
 
                 // Create responses sheet
                 const responsesData = [
@@ -1342,11 +1393,11 @@
                     ]);
                 });
 
-                const ws = XLSX.utils.aoa_to_sheet(responsesData);
-                XLSX.utils.book_append_sheet(wb, ws, 'CPGIO Responses');
+                const ws = window.XLSX.utils.aoa_to_sheet(responsesData);
+                window.XLSX.utils.book_append_sheet(wb, ws, 'CPGIO Responses');
 
                 // Download
-                XLSX.writeFile(wb, `CPGIO_RFP_Response_${new Date().toISOString().split('T')[0]}.xlsx`);
+                window.XLSX.writeFile(wb, `CPGIO_RFP_Response_${new Date().toISOString().split('T')[0]}.xlsx`);
             };
 
             const updateResponse = (questionId, newResponse) => {
