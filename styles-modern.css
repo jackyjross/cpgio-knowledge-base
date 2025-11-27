@@ -323,6 +323,10 @@ body {
     display: none;
 }
 
+.sidebar.collapsed .logo {
+    display: none;
+}
+
 .sidebar-header {
     padding: var(--spacing-xl);
     border-bottom: 1px solid var(--sidebar-border);
