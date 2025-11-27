@@ -2890,6 +2890,206 @@ body {
     text-decoration: underline;
 }
 
+/* Journey Pathways */
+.journey-pathways {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-3xl);
+}
+
+.journey-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.journey-card:hover {
+    border-color: var(--color-accent-blue);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+    transform: translateY(-2px);
+}
+
+.journey-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--color-bg-accent-blue);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-accent-blue);
+}
+
+.journey-title {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-sm);
+}
+
+.journey-description {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+    flex-grow: 1;
+}
+
+.journey-cta {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-accent-blue);
+    transition: transform var(--transition-fast);
+}
+
+.journey-card:hover .journey-cta {
+    transform: translateX(4px);
+}
+
+/* Pillars Section */
+.pillars-section {
+    margin-bottom: var(--spacing-3xl);
+}
+
+.section-subtitle {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-xl);
+}
+
+.pillars-grid {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.pillar-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.pillar-card:hover {
+    border-color: var(--color-accent-blue);
+}
+
+.pillar-header {
+    padding: var(--spacing-lg);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.pillar-header:hover {
+    background: var(--color-bg-secondary);
+}
+
+.pillar-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-xs);
+}
+
+.pillar-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.pillar-chevron {
+    color: var(--color-text-secondary);
+    transition: transform var(--transition-normal);
+}
+
+.pillar-chevron.expanded {
+    transform: rotate(180deg);
+}
+
+.pillar-count {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+.pillar-capabilities {
+    border-top: 1px solid var(--color-border);
+    padding: var(--spacing-md);
+    background: var(--color-bg-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.pillar-capability-item {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.pillar-capability-item:hover {
+    border-color: var(--color-accent-blue);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.08);
+}
+
+.pillar-cap-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-xs);
+}
+
+.pillar-cap-title {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.pillar-cap-arrow {
+    color: var(--color-accent-blue);
+    font-size: var(--font-size-lg);
+    transition: transform var(--transition-fast);
+}
+
+.pillar-capability-item:hover .pillar-cap-arrow {
+    transform: translateX(4px);
+}
+
+.pillar-cap-description {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-bottom: var(--spacing-sm);
+}
+
+.pillar-cap-kpis {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+}
+
+.pillar-kpi-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: var(--color-bg-accent-blue);
+    color: var(--color-accent-blue);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .timeline-container {
@@ -2938,5 +3138,9 @@ body {
 
     .results-grid-compact {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+
+    .journey-pathways {
+        grid-template-columns: 1fr;
     }
 }

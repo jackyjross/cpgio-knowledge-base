@@ -381,110 +381,127 @@
 
         // Home Page Component
         function HomePage({ setActiveSection }) {
+            const [expandedPillar, setExpandedPillar] = React.useState(null);
+
+            // Group capabilities by pillar
+            const pillarGroups = {
+                'Growth Strategy & Planning': [],
+                'Marketplace Operations': [],
+                'Retail Media & Performance Marketing': [],
+                'Operations & Supply Chain': [],
+                'Direct-to-Consumer & Owned Channels': []
+            };
+
+            knowledgeBase.capabilities.forEach(cap => {
+                if (pillarGroups[cap.pillar]) {
+                    pillarGroups[cap.pillar].push(cap);
+                }
+            });
+
             return (
                 <div className="page-content">
                     <div className="hero-section">
                         <h1 className="page-title">CPGIO Knowledge Base</h1>
                         <p className="page-subtitle">
-                            Explore our capabilities, proven results, and service-level KPIs.
-                            Use AI-powered Q&A for brand discovery or analyze RFPs with intelligent automation.
+                            Choose your path: discover our capabilities, evaluate us for an RFP, or access internal resources.
                         </p>
                     </div>
 
-                    <div className="card-grid">
-                        <div className="feature-card" onClick={() => setActiveSection('capabilities')}>
-                            <div className="card-icon"><Icon name="zap" size={32} /></div>
-                            <h3 className="card-title">Capabilities</h3>
-                            <p className="card-description">
-                                12 core capabilities spanning integrated operations, financial flexibility,
-                                ASIN prioritization, fulfillment excellence, and more.
-                            </p>
-                            <div className="card-stats">
-                                <span className="stat-badge">12 Capabilities</span>
-                                <span className="stat-badge">60+ KPIs</span>
+                    {/* Three Journey Pathways */}
+                    <div className="journey-pathways">
+                        <div className="journey-card" onClick={() => setActiveSection('capabilities')}>
+                            <div className="journey-icon">
+                                <Icon name="users" size={28} />
                             </div>
+                            <h3 className="journey-title">New to CPGIO?</h3>
+                            <p className="journey-description">
+                                Explore our 5 strategic pillars and 12 core capabilities with proven KPIs and case studies.
+                            </p>
+                            <div className="journey-cta">Explore Capabilities →</div>
                         </div>
 
-                        <div className="feature-card" onClick={() => setActiveSection('case-studies')}>
-                            <div className="card-icon"><Icon name="bar-chart-3" size={32} /></div>
-                            <h3 className="card-title">Case Studies</h3>
-                            <p className="card-description">
-                                Real client success stories with quantified results across fulfillment,
-                                growth, media, and brand protection.
-                            </p>
-                            <div className="card-stats">
-                                <span className="stat-badge">20+ Case Studies</span>
-                                <span className="stat-badge">8 Categories</span>
+                        <div className="journey-card" onClick={() => setActiveSection('rfp-center')}>
+                            <div className="journey-icon">
+                                <Icon name="file-text" size={28} />
                             </div>
+                            <h3 className="journey-title">Evaluating Us?</h3>
+                            <p className="journey-description">
+                                Get direct answers to common RFP questions with copy-paste responses and supporting data.
+                            </p>
+                            <div className="journey-cta">Browse RFP Center →</div>
                         </div>
 
-                        <div className="feature-card" onClick={() => setActiveSection('kpis')}>
-                            <div className="card-icon"><Icon name="trending-up" size={32} /></div>
-                            <h3 className="card-title">Service KPIs</h3>
-                            <p className="card-description">
-                                Performance metrics and benchmarks across fulfillment, media,
-                                growth, compliance, and omnichannel execution.
-                            </p>
-                            <div className="card-stats">
-                                <span className="stat-badge">6 Categories</span>
-                                <span className="stat-badge">Verified Data</span>
+                        <div className="journey-card" onClick={() => setActiveSection('ai-qa')}>
+                            <div className="journey-icon">
+                                <Icon name="sparkles" size={28} />
                             </div>
-                        </div>
-
-                        <div className="feature-card highlight" onClick={() => setActiveSection('ai-qa')}>
-                            <div className="card-icon"><Icon name="sparkles" size={32} /></div>
-                            <h3 className="card-title">AI Q&A</h3>
-                            <p className="card-description">
-                                Ask questions about CPGIO's capabilities, approach, and services.
-                                Get instant, context-aware answers from our knowledge base.
+                            <h3 className="journey-title">Internal Team?</h3>
+                            <p className="journey-description">
+                                Use AI-powered search to find specific answers, case studies, or prep for client calls.
                             </p>
-                            <div className="card-badge">Try it now</div>
-                        </div>
-
-                        <div className="feature-card highlight" onClick={() => setActiveSection('rfp-analyzer')}>
-                            <div className="card-icon"><Icon name="file-text" size={32} /></div>
-                            <h3 className="card-title">RFP Analyzer</h3>
-                            <p className="card-description">
-                                Upload Excel RFPs for intelligent analysis. Automatically extract questions
-                                and format for streamlined response creation.
-                            </p>
-                            <div className="card-badge">Upload RFP</div>
-                        </div>
-
-                        <div className="feature-card" onClick={() => setActiveSection('frameworks')}>
-                            <div className="card-icon"><Icon name="target" size={32} /></div>
-                            <h3 className="card-title">Frameworks</h3>
-                            <p className="card-description">
-                                Strategic frameworks including Financial Models, Go-To-Market Approach,
-                                and ASIN Scorecard System.
-                            </p>
-                            <div className="card-stats">
-                                <span className="stat-badge">2 Frameworks</span>
-                            </div>
+                            <div className="journey-cta">Search Knowledge Base →</div>
                         </div>
                     </div>
 
-                    <div className="process-timeline">
-                        <h2 className="section-title">Our Engagement Process</h2>
-                        <div className="timeline-container">
-                            {knowledgeBase.process.map((step, index) => (
-                                <div key={step.step} className="timeline-step">
-                                    <div className="timeline-icon">
-                                        <Icon name={step.icon} size={32} />
+                    {/* Pillar-Based Capabilities */}
+                    <div className="pillars-section">
+                        <h2 className="section-title">Our 5 Strategic Pillars</h2>
+                        <p className="section-subtitle">
+                            Click any pillar to expand and see specific capabilities with KPIs.
+                        </p>
+
+                        <div className="pillars-grid">
+                            {Object.entries(pillarGroups).map(([pillar, capabilities]) => (
+                                <div key={pillar} className="pillar-card">
+                                    <div
+                                        className="pillar-header"
+                                        onClick={() => setExpandedPillar(expandedPillar === pillar ? null : pillar)}
+                                    >
+                                        <div className="pillar-title-row">
+                                            <h3 className="pillar-title">{pillar}</h3>
+                                            <Icon
+                                                name="chevron-down"
+                                                size={20}
+                                                className={`pillar-chevron ${expandedPillar === pillar ? 'expanded' : ''}`}
+                                            />
+                                        </div>
+                                        <div className="pillar-count">{capabilities.length} Capabilities</div>
                                     </div>
-                                    <div className="timeline-content">
-                                        <div className="timeline-number">Step {step.step}</div>
-                                        <h3 className="timeline-title">{step.title}</h3>
-                                        <p className="timeline-description">{step.description}</p>
-                                    </div>
-                                    {index < knowledgeBase.process.length - 1 && (
-                                        <div className="timeline-connector"></div>
+
+                                    {expandedPillar === pillar && (
+                                        <div className="pillar-capabilities">
+                                            {capabilities.map(cap => (
+                                                <div
+                                                    key={cap.id}
+                                                    className="pillar-capability-item"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setActiveSection('capabilities');
+                                                        // Note: Would need to pass selectedCapability setter here
+                                                    }}
+                                                >
+                                                    <div className="pillar-cap-header">
+                                                        <h4 className="pillar-cap-title">{cap.title}</h4>
+                                                        <span className="pillar-cap-arrow">→</span>
+                                                    </div>
+                                                    <p className="pillar-cap-description">{cap.description}</p>
+                                                    <div className="pillar-cap-kpis">
+                                                        {cap.kpis.slice(0, 2).map((kpi, idx) => (
+                                                            <span key={idx} className="pillar-kpi-badge">
+                                                                {kpi.metric}: {kpi.value}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     )}
                                 </div>
                             ))}
                         </div>
                     </div>
 
+                    {/* Performance Highlights */}
                     <div className="quick-stats">
                         <h2 className="section-title">Performance Highlights</h2>
                         <div className="stats-grid">
@@ -512,6 +529,28 @@
                                 <div className="stat-value">&lt;0.01%</div>
                                 <div className="stat-label">Defect Rate</div>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Engagement Process Timeline */}
+                    <div className="process-timeline">
+                        <h2 className="section-title">Our Engagement Process</h2>
+                        <div className="timeline-container">
+                            {knowledgeBase.process.map((step, index) => (
+                                <div key={step.step} className="timeline-step">
+                                    <div className="timeline-icon">
+                                        <Icon name={step.icon} size={32} />
+                                    </div>
+                                    <div className="timeline-content">
+                                        <div className="timeline-number">Step {step.step}</div>
+                                        <h3 className="timeline-title">{step.title}</h3>
+                                        <p className="timeline-description">{step.description}</p>
+                                    </div>
+                                    {index < knowledgeBase.process.length - 1 && (
+                                        <div className="timeline-connector"></div>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
