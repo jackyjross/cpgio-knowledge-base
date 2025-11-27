@@ -121,6 +121,7 @@
                             {activeSection === 'frameworks' && <FrameworksPage searchQuery={searchQuery} />}
                             {activeSection === 'about' && <AboutPage />}
                             {activeSection === 'glossary' && <GlossaryPage />}
+                            {activeSection === 'rfp-center' && <RFPCenterPage />}
                             {activeSection === 'ai-qa' && (
                                 <AIQAPage
                                     aiQuery={aiQuery}
@@ -156,13 +157,14 @@
             const navItems = [
                 { id: 'home', label: 'Home', icon: 'home' },
                 { id: 'capabilities', label: 'Capabilities', icon: 'zap' },
+                { id: 'rfp-center', label: 'RFP Center', icon: 'file-text' },
                 { id: 'case-studies', label: 'Case Studies', icon: 'bar-chart-3' },
                 { id: 'kpis', label: 'Service KPIs', icon: 'trending-up' },
                 { id: 'frameworks', label: 'Frameworks', icon: 'target' },
                 { id: 'about', label: 'Team', icon: 'users' },
                 { id: 'glossary', label: 'Glossary', icon: 'book' },
                 { id: 'ai-qa', label: 'AI Q&A', icon: 'sparkles', badge: 'BETA' },
-                { id: 'rfp-analyzer', label: 'RFP Analyzer', icon: 'file-text', badge: 'BETA' },
+                { id: 'rfp-analyzer', label: 'RFP Analyzer', icon: 'upload', badge: 'BETA' },
             ];
 
             return (
@@ -1521,6 +1523,127 @@
                     {filteredGlossary.length === 0 && (
                         <div className="no-results">
                             <p>No terms found matching your search.</p>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // RFP Center Page Component
+        function RFPCenterPage() {
+            const [expandedQuestion, setExpandedQuestion] = useState(null);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [copiedIndex, setCopiedIndex] = useState(null);
+
+            const filteredQuestions = knowledgeBase.rfpAnswers.filter(item =>
+                item.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item.answer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+            );
+
+            const toggleQuestion = (index) => {
+                setExpandedQuestion(expandedQuestion === index ? null : index);
+            };
+
+            const copyToClipboard = (text, index) => {
+                navigator.clipboard.writeText(text);
+                setCopiedIndex(index);
+                setTimeout(() => setCopiedIndex(null), 2000);
+            };
+
+            return (
+                <div className="page-content">
+                    <div className="page-header">
+                        <h1 className="page-title">RFP Center</h1>
+                        <p className="page-subtitle">
+                            Quick answers to common RFP questions. All responses include quantified results and can be copied directly into your proposals.
+                        </p>
+                    </div>
+
+                    <div className="rfp-search">
+                        <input
+                            type="text"
+                            placeholder="Search questions by topic, keyword, or tag..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="search-input"
+                        />
+                    </div>
+
+                    <div className="rfp-stats">
+                        <div className="rfp-stat">
+                            <span className="rfp-stat-value">{filteredQuestions.length}</span>
+                            <span className="rfp-stat-label">Questions</span>
+                        </div>
+                        <div className="rfp-stat">
+                            <span className="rfp-stat-value">{knowledgeBase.capabilities.length}</span>
+                            <span className="rfp-stat-label">Capabilities</span>
+                        </div>
+                        <div className="rfp-stat">
+                            <span className="rfp-stat-value">{knowledgeBase.caseStudies.length}</span>
+                            <span className="rfp-stat-label">Case Studies</span>
+                        </div>
+                    </div>
+
+                    <div className="accordion-container">
+                        {filteredQuestions.map((item, index) => {
+                            const isExpanded = expandedQuestion === index;
+                            const relatedCapability = knowledgeBase.capabilities.find(
+                                cap => cap.id === item.relatedCapabilityId
+                            );
+
+                            return (
+                                <div key={index} className="accordion-item rfp-question-item">
+                                    <button
+                                        className="accordion-trigger"
+                                        onClick={() => toggleQuestion(index)}
+                                    >
+                                        <div className="accordion-header-content">
+                                            <h3 className="rfp-question-title">{item.question}</h3>
+                                            <div className="rfp-tags">
+                                                {item.tags.slice(0, 3).map((tag, idx) => (
+                                                    <span key={idx} className="tag-pill">{tag}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <span className={`accordion-chevron ${isExpanded ? 'expanded' : ''}`}>
+                                            <Icon name="chevron-down" size={20} />
+                                        </span>
+                                    </button>
+
+                                    {isExpanded && (
+                                        <div className="accordion-content">
+                                            <div className="rfp-answer-box">
+                                                <div className="rfp-answer-header">
+                                                    <h4>Copy-Paste Answer</h4>
+                                                    <button
+                                                        className="copy-button"
+                                                        onClick={() => copyToClipboard(item.answer, index)}
+                                                    >
+                                                        {copiedIndex === index ? '✓ Copied!' : 'Copy'}
+                                                    </button>
+                                                </div>
+                                                <p className="rfp-answer-text">{item.answer}</p>
+                                            </div>
+
+                                            {relatedCapability && (
+                                                <div className="rfp-related">
+                                                    <strong>Related Capability:</strong>
+                                                    <a href="#" className="rfp-link">
+                                                        {relatedCapability.title}
+                                                    </a>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {filteredQuestions.length === 0 && (
+                        <div className="no-results">
+                            <p>No questions found matching "{searchTerm}"</p>
                         </div>
                     )}
                 </div>
