@@ -308,6 +308,21 @@ body {
     width: var(--sidebar-collapsed-width);
 }
 
+.sidebar.collapsed .sidebar-nav {
+    padding: var(--spacing-md);
+    align-items: center;
+}
+
+.sidebar.collapsed .nav-item {
+    justify-content: center;
+    padding: var(--spacing-md);
+    width: 100%;
+}
+
+.sidebar.collapsed .nav-item::before {
+    display: none;
+}
+
 .sidebar-header {
     padding: var(--spacing-xl);
     border-bottom: 1px solid var(--sidebar-border);
