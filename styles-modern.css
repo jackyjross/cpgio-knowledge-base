@@ -97,7 +97,7 @@
     --color-bg-secondary: #18181b;
     --color-bg-tertiary: #27272a;
     --color-bg-hover: #27272a;
-    --color-bg-accent: #0c4a6e;
+    --color-bg-accent: #1e3a5f;
 
     /* Dark borders */
     --color-border: #27272a;
@@ -108,7 +108,7 @@
     --color-text-primary: #fafafa;
     --color-text-secondary: #a1a1aa;
     --color-text-tertiary: #71717a;
-    --color-text-muted: #52525b;
+    --color-text-muted: #71717a;
 
     --sidebar-bg: #09090b;
     --sidebar-border: #27272a;
@@ -118,6 +118,25 @@
     --shadow-md: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
     --shadow-xl: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+}
+
+/* Dark mode specific overrides for highlight cards */
+[data-theme="dark"] .feature-card.highlight {
+    background: var(--color-bg-accent);
+    border-color: #2563eb;
+}
+
+[data-theme="dark"] .feature-card.highlight .card-title {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .feature-card.highlight .card-description {
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .feature-card.highlight .card-badge {
+    background: #1e40af;
+    color: #ffffff;
 }
 
 /* Reset and base styles */
