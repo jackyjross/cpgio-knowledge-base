@@ -772,7 +772,130 @@ const knowledgeBase = {
         }
       ]
     }
-  }
+  },
+
+  glossary: [
+    {
+      term: 'ASIN',
+      definition: 'Amazon Standard Identification Number - A unique 10-character identifier assigned by Amazon to products in their catalog.',
+      category: 'Amazon',
+      cpgioContext: 'We build, optimize, and protect ASINs to maximize ranking, conversion, and buy box control.'
+    },
+    {
+      term: '3P (Third Party)',
+      definition: 'Third-party sellers on Amazon who sell directly to customers. Inventory is owned by the seller, not Amazon.',
+      category: 'Amazon',
+      cpgioContext: 'Our 3PL model gives brands full control over pricing, inventory ownership, and marketplace strategy while we handle operations.'
+    },
+    {
+      term: '1P (First Party)',
+      definition: 'First-party selling where Amazon purchases inventory wholesale and resells it. Also known as Vendor Central.',
+      category: 'Amazon',
+      cpgioContext: 'We recommend starting with 3P to build data and control, then expanding top SKUs to 1P when appropriate.'
+    },
+    {
+      term: 'ROAS',
+      definition: 'Return on Ad Spend - A metric measuring revenue generated for every dollar spent on advertising. Calculated as (Revenue / Ad Spend).',
+      category: 'Media',
+      cpgioContext: 'We consistently achieve 5-8x ROAS through data-driven media strategies and Amazon Marketing Cloud integration.'
+    },
+    {
+      term: 'SIOC',
+      definition: 'Ships In Own Container - Products packaged by the manufacturer in a way that eliminates the need for additional Amazon packaging.',
+      category: 'Logistics',
+      cpgioContext: 'We design SIOC-compliant bundles to reduce shipping costs by 20%+ while improving customer satisfaction and sustainability.'
+    },
+    {
+      term: 'Buy Box',
+      definition: 'The prominent "Add to Cart" button on an Amazon product page. Winning the buy box means your offer is the default choice for customers.',
+      category: 'Amazon',
+      cpgioContext: 'Through pricing discipline, FBA optimization, and seller performance, we achieve >95% buy box control for brand partners.'
+    },
+    {
+      term: 'A+ Content',
+      definition: 'Enhanced product descriptions with rich media, comparison charts, and brand storytelling. Available to Brand Registry sellers.',
+      category: 'Content',
+      cpgioContext: 'We build A+ Content at scale (400+ ASINs) to improve conversion rates and reduce returns through better product education.'
+    },
+    {
+      term: 'FBA',
+      definition: 'Fulfillment by Amazon - Amazon stores, picks, packs, and ships products on behalf of sellers.',
+      category: 'Logistics',
+      cpgioContext: 'We optimize FBA strategy for Prime eligibility and fast shipping while maintaining hybrid FBM capabilities for flexibility.'
+    },
+    {
+      term: 'FBM',
+      definition: 'Fulfillment by Merchant - Sellers handle their own storage, packing, and shipping rather than using Amazon fulfillment.',
+      category: 'Logistics',
+      cpgioContext: 'Our fulfillment centers provide FBM capabilities for surge capacity (200K units/month) and specialized SKUs.'
+    },
+    {
+      term: 'MAP',
+      definition: 'Minimum Advertised Price - The lowest price a retailer can advertise a product, set by the manufacturer.',
+      category: 'Brand Protection',
+      cpgioContext: 'We enforce MAP policies through Amazon Transparency, IP claims, and systematic rogue seller removal.'
+    },
+    {
+      term: 'GS1',
+      definition: 'Global Standards Organization that issues authentic UPC barcodes. Amazon requires GS1-compliant UPCs for most categories.',
+      category: 'Compliance',
+      cpgioContext: 'We ensure 100% GS1 compliance to prevent listing suspensions and establish catalog integrity for Brand Registry.'
+    },
+    {
+      term: 'Brand Registry',
+      definition: "Amazon's program for trademark owners to protect their brand and access enhanced content tools.",
+      category: 'Brand Protection',
+      cpgioContext: 'We leverage Brand Registry to remove counterfeiters, control catalog content, and access advanced advertising features.'
+    },
+    {
+      term: 'ACoS',
+      definition: 'Advertising Cost of Sale - The percentage of sales spent on advertising. Calculated as (Ad Spend / Revenue).',
+      category: 'Media',
+      cpgioContext: 'We optimize ACoS from 38% to 21% through campaign restructuring while increasing new-to-brand customer acquisition.'
+    },
+    {
+      term: 'New-to-Brand (NTB)',
+      definition: 'Customers who purchase from a brand for the first time. A key metric for customer acquisition efficiency.',
+      category: 'Media',
+      cpgioContext: 'Our media strategies achieve 29-41% NTB rates, focusing on sustainable customer acquisition over short-term ROAS.'
+    },
+    {
+      term: 'AMC',
+      definition: 'Amazon Marketing Cloud - Amazon\'s clean room solution for advanced analytics and audience insights.',
+      category: 'Media',
+      cpgioContext: 'We use AMC to analyze customer journeys, optimize attribution, and refine targeting strategies for better ROAS.'
+    },
+    {
+      term: 'Orphan ASIN',
+      definition: 'A product listing that exists on Amazon but is not properly attributed to the brand owner or authorized seller.',
+      category: 'Amazon',
+      cpgioContext: 'We capture high-ranking orphan ASINs for immediate revenue while building compliant catalog infrastructure.'
+    },
+    {
+      term: 'Variation',
+      definition: 'Different versions of the same product (size, color, flavor) grouped under one parent ASIN.',
+      category: 'Catalog',
+      cpgioContext: 'We design strategic variations (multipacks, bundles) to improve conversion and average order value.'
+    },
+    {
+      term: 'GTIN',
+      definition: 'Global Trade Item Number - The umbrella term for product identifiers including UPC, EAN, and ISBN codes.',
+      category: 'Compliance',
+      cpgioContext: 'We manage GTIN validation, assignment, and compliance across multi-marketplace catalog operations.'
+    },
+    {
+      term: 'SKU',
+      definition: 'Stock Keeping Unit - An internal identifier used to track inventory and variants.',
+      category: 'Logistics',
+      cpgioContext: 'We launched 800+ SKUs with 45% time reduction through standardized processes and quality control protocols.'
+    },
+    {
+      term: 'Co-Packing',
+      definition: 'Creating custom product bundles, kits, or multi-packs by combining individual items into new SKUs.',
+      category: 'Logistics',
+      cpgioContext: 'Our fulfillment centers provide co-packing for seasonal products, variety packs, and SIOC-optimized bundles.'
+    }
+  ]
 };
 
 // Export for use in other modules

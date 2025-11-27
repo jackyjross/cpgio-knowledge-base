@@ -50,7 +50,8 @@
                 'search': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>',
                 'shield': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
                 'rocket': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>',
-                'users': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
+                'users': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+                'book': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'
             };
 
             const svg = iconMap[name] || iconMap['home'];
@@ -118,6 +119,7 @@
                             {activeSection === 'kpis' && <KPIsPage searchQuery={searchQuery} />}
                             {activeSection === 'frameworks' && <FrameworksPage searchQuery={searchQuery} />}
                             {activeSection === 'about' && <AboutPage />}
+                            {activeSection === 'glossary' && <GlossaryPage />}
                             {activeSection === 'ai-qa' && (
                                 <AIQAPage
                                     aiQuery={aiQuery}
@@ -157,6 +159,7 @@
                 { id: 'kpis', label: 'Service KPIs', icon: 'trending-up' },
                 { id: 'frameworks', label: 'Frameworks', icon: 'target' },
                 { id: 'about', label: 'Team', icon: 'users' },
+                { id: 'glossary', label: 'Glossary', icon: 'book' },
                 { id: 'ai-qa', label: 'AI Q&A', icon: 'sparkles', badge: 'BETA' },
                 { id: 'rfp-analyzer', label: 'RFP Analyzer', icon: 'file-text', badge: 'BETA' },
             ];
@@ -241,7 +244,8 @@
                 const results = {
                     capabilities: [],
                     caseStudies: [],
-                    kpis: []
+                    kpis: [],
+                    glossary: []
                 };
 
                 // Search capabilities
@@ -273,6 +277,13 @@
                 });
                 results.kpis = results.kpis.slice(0, 3);
 
+                // Search Glossary
+                results.glossary = knowledgeBase.glossary.filter(item =>
+                    item.term.toLowerCase().includes(query) ||
+                    item.definition.toLowerCase().includes(query) ||
+                    item.category.toLowerCase().includes(query)
+                ).slice(0, 3);
+
                 return results;
             };
 
@@ -280,7 +291,8 @@
             const hasResults = searchResults && (
                 searchResults.capabilities.length > 0 ||
                 searchResults.caseStudies.length > 0 ||
-                searchResults.kpis.length > 0
+                searchResults.kpis.length > 0 ||
+                searchResults.glossary.length > 0
             );
 
             return (
@@ -341,6 +353,18 @@
                                             <div key={idx} className="search-result-item">
                                                 <strong>{kpi.key}</strong>
                                                 <span className="search-result-meta">{kpi.value}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {searchResults.glossary.length > 0 && (
+                                    <div className="search-category">
+                                        <div className="search-category-title">Glossary</div>
+                                        {searchResults.glossary.map((item, idx) => (
+                                            <div key={idx} className="search-result-item">
+                                                <strong>{item.term}</strong>
+                                                <span className="search-result-meta">{item.category}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -761,6 +785,17 @@
 
         // AI Q&A Page Component (to be continued...)
         function AIQAPage({ aiQuery, setAiQuery, aiResponse, setAiResponse, aiLoading, setAiLoading }) {
+            const suggestedQuestions = [
+                "What is your defect rate?",
+                "How do you handle returns?",
+                "What ROAS do you typically achieve?",
+                "How fast can you ship 100K units?",
+                "How do you protect brands from unauthorized sellers?",
+                "What is the difference between 3PL and Distribution models?",
+                "Can you help with Amazon Brand Registry?",
+                "What is your experience with FBA and FBM?"
+            ];
+
             const handleAskQuestion = () => {
                 if (!aiQuery.trim()) return;
 
@@ -772,6 +807,19 @@
                     setAiResponse(response);
                     setAiLoading(false);
                 }, 1500);
+            };
+
+            const handleSuggestedClick = (question) => {
+                setAiQuery(question);
+                // Auto-submit the question
+                setTimeout(() => {
+                    setAiLoading(true);
+                    setTimeout(() => {
+                        const response = searchKnowledgeBase(question);
+                        setAiResponse(response);
+                        setAiLoading(false);
+                    }, 1500);
+                }, 100);
             };
 
             const searchKnowledgeBase = (query) => {
@@ -868,6 +916,24 @@
                                 {aiLoading ? 'Searching knowledge base...' : 'Ask Question'}
                             </button>
                         </div>
+
+                        {!aiResponse && (
+                            <div className="suggested-questions">
+                                <h3 className="suggested-title">Suggested Questions</h3>
+                                <div className="question-chips">
+                                    {suggestedQuestions.map((question, idx) => (
+                                        <button
+                                            key={idx}
+                                            className="question-chip"
+                                            onClick={() => handleSuggestedClick(question)}
+                                            disabled={aiLoading}
+                                        >
+                                            {question}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {aiResponse && (
                             <div className="qa-response-section">
@@ -1325,6 +1391,96 @@
                             </div>
                         ))}
                     </div>
+                </div>
+            );
+        }
+
+        // Glossary Page Component
+        function GlossaryPage() {
+            const [glossarySearch, setGlossarySearch] = useState('');
+            const [selectedLetter, setSelectedLetter] = useState('ALL');
+
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+            // Filter glossary by search and letter
+            const filteredGlossary = knowledgeBase.glossary.filter(item => {
+                const matchesSearch = !glossarySearch ||
+                    item.term.toLowerCase().includes(glossarySearch.toLowerCase()) ||
+                    item.definition.toLowerCase().includes(glossarySearch.toLowerCase()) ||
+                    item.category.toLowerCase().includes(glossarySearch.toLowerCase());
+
+                const matchesLetter = selectedLetter === 'ALL' ||
+                    item.term.toUpperCase().startsWith(selectedLetter);
+
+                return matchesSearch && matchesLetter;
+            });
+
+            // Group by category
+            const categories = [...new Set(knowledgeBase.glossary.map(item => item.category))];
+
+            return (
+                <div className="page-content">
+                    <div className="page-header">
+                        <h1 className="page-title">eCommerce Glossary</h1>
+                        <p className="page-subtitle">
+                            Essential terms and concepts in Amazon marketplace operations, logistics, and digital commerce.
+                        </p>
+                    </div>
+
+                    {/* Search Bar */}
+                    <div className="glossary-search">
+                        <input
+                            type="text"
+                            placeholder="Search terms, definitions, categories..."
+                            value={glossarySearch}
+                            onChange={(e) => setGlossarySearch(e.target.value)}
+                            className="search-input"
+                        />
+                    </div>
+
+                    {/* A-Z Index */}
+                    <div className="az-index">
+                        <button
+                            className={`az-letter ${selectedLetter === 'ALL' ? 'active' : ''}`}
+                            onClick={() => setSelectedLetter('ALL')}
+                        >
+                            ALL
+                        </button>
+                        {alphabet.map(letter => (
+                            <button
+                                key={letter}
+                                className={`az-letter ${selectedLetter === letter ? 'active' : ''}`}
+                                onClick={() => setSelectedLetter(letter)}
+                            >
+                                {letter}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Glossary Terms */}
+                    <div className="glossary-grid">
+                        {filteredGlossary.map((item, index) => (
+                            <div key={index} className="glossary-card">
+                                <div className="glossary-header">
+                                    <h3 className="glossary-term">{item.term}</h3>
+                                    <span className="glossary-category">{item.category}</span>
+                                </div>
+                                <p className="glossary-definition">{item.definition}</p>
+                                {item.cpgioContext && (
+                                    <div className="glossary-context">
+                                        <strong>Why it matters to CPGIO:</strong>
+                                        <p>{item.cpgioContext}</p>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    {filteredGlossary.length === 0 && (
+                        <div className="no-results">
+                            <p>No terms found matching your search.</p>
+                        </div>
+                    )}
                 </div>
             );
         }

@@ -2405,6 +2405,174 @@ body {
     position: relative;
 }
 
+/* Glossary Page */
+.glossary-search {
+    margin-bottom: var(--spacing-xl);
+}
+
+.glossary-search .search-input {
+    width: 100%;
+    max-width: 600px;
+}
+
+.az-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-2xl);
+    padding: var(--spacing-md);
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.az-letter {
+    padding: 8px 12px;
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    min-width: 40px;
+}
+
+.az-letter:hover {
+    border-color: var(--color-accent-blue);
+    color: var(--color-accent-blue);
+}
+
+.az-letter.active {
+    background: var(--color-accent-blue);
+    border-color: var(--color-accent-blue);
+    color: white;
+}
+
+.glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.glossary-card {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    transition: all var(--transition-base);
+}
+
+.glossary-card:hover {
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-md);
+}
+
+.glossary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-md);
+    gap: var(--spacing-md);
+}
+
+.glossary-term {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.glossary-category {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--color-accent-blue);
+    background: var(--color-bg-accent-blue);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+}
+
+.glossary-definition {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-md);
+}
+
+.glossary-context {
+    background: var(--color-bg-accent-teal);
+    border-left: 3px solid var(--color-accent-teal);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-sm);
+    margin-top: var(--spacing-md);
+}
+
+.glossary-context strong {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-accent-teal);
+    margin-bottom: var(--spacing-sm);
+}
+
+.glossary-context p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.no-results {
+    text-align: center;
+    padding: var(--spacing-3xl);
+    color: var(--color-text-tertiary);
+}
+
+/* Suggested Questions Chips */
+.suggested-questions {
+    margin: var(--spacing-2xl) 0;
+}
+
+.suggested-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.question-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.question-chip {
+    padding: 10px 16px;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.question-chip:hover:not(:disabled) {
+    background: var(--color-bg-accent-blue);
+    border-color: var(--color-accent-blue);
+    color: var(--color-accent-blue);
+    transform: translateY(-2px);
+}
+
+.question-chip:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.question-chip:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .timeline-container {
@@ -2425,5 +2593,19 @@ body {
 
     .search-results-dropdown {
         max-height: 300px;
+    }
+
+    .glossary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .az-index {
+        gap: 6px;
+    }
+
+    .az-letter {
+        padding: 6px 10px;
+        min-width: 35px;
+        font-size: var(--font-size-xs);
     }
 }
