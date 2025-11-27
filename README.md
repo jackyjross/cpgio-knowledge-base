@@ -2,21 +2,22 @@
 
 An interactive, AI-powered knowledge base platform showcasing CPGIO's capabilities, service-level KPIs, case studies, and RFP intelligence tools.
 
-## 🚀 Features
+## Features
 
-### 📚 Comprehensive Knowledge Base
+### Comprehensive Knowledge Base
 - **12 Core Capabilities** with detailed service-level KPIs
 - **20+ Case Studies** across 8 categories
 - **60+ Performance Metrics** with verified data
 - **Strategic Frameworks** (Financial Models, GTM Approach)
+- **Team Profiles** showcasing expertise across operations, media, and compliance
 
-### 🤖 AI-Powered Q&A
+### AI-Powered Q&A
 - Natural language question answering
 - Intelligent knowledge base search
 - Context-aware responses
 - Related capabilities and case studies surfacing
 
-### 📄 RFP Analyzer
+### RFP Analyzer
 - Excel RFP upload and parsing
 - Automatic question extraction
 - Question categorization (Pricing, Media, Fulfillment, etc.)
@@ -24,14 +25,16 @@ An interactive, AI-powered knowledge base platform showcasing CPGIO's capabiliti
 - Formatted response templates
 - Export to Excel functionality
 
-### 💎 Notion-like Interface
-- Clean, intuitive design
-- Responsive layout
+### Modern Interface
+- Clean, intuitive design with shadcn-inspired aesthetics
+- Responsive layout optimized for all devices
 - Smooth animations and transitions
 - Collapsible sidebar navigation
-- Search functionality
+- Grouped search with real-time results
+- Interactive financial model comparison
+- 4-step engagement process timeline
 
-## 🛠 Technology Stack
+## Technology Stack
 
 - **Frontend**: React 18 (via CDN)
 - **Styling**: Custom CSS with CSS Variables
@@ -39,24 +42,24 @@ An interactive, AI-powered knowledge base platform showcasing CPGIO's capabiliti
 - **Hosting**: GitHub Pages compatible
 - **No build process required** - runs directly in browser
 
-## 📦 Project Structure
+## Project Structure
 
 ```
 cpgio-knowledge-base/
 ├── index.html                 # Main HTML file with React components
-├── styles.css                 # Notion-like CSS styling
+├── styles-modern.css          # shadcn-inspired CSS styling
 ├── knowledge-base-data.js     # Structured knowledge base content
 ├── README.md                  # This file
 └── .gitignore                # Git ignore file
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Local Development
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/YOUR_USERNAME/cpgio-knowledge-base.git
+git clone https://github.com/jackyjross/cpgio-knowledge-base.git
 cd cpgio-knowledge-base
 ```
 
@@ -92,17 +95,18 @@ git push -u origin main
 
 3. Your site will be live at: `https://YOUR_USERNAME.github.io/cpgio-knowledge-base/`
 
-## 📖 Usage
+## Usage
 
 ### Navigating the Knowledge Base
 
-- **Home**: Overview with performance highlights and quick access cards
+- **Home**: Overview with process timeline, performance highlights and quick access cards
 - **Capabilities**: Browse 12 core capabilities organized by category
 - **Case Studies**: Explore client success stories with quantified results
 - **Service KPIs**: View performance benchmarks across all service categories
-- **Frameworks**: Learn about strategic approaches (Financial Models, GTM)
-- **AI Q&A**: Ask questions and get intelligent answers
-- **RFP Analyzer**: Upload and analyze RFP Excel files
+- **Frameworks**: Interactive financial model comparison and strategic approaches
+- **Team**: Meet the experts behind CPGIO's proven track record
+- **AI Q&A (BETA)**: Ask questions and get intelligent answers
+- **RFP Analyzer (BETA)**: Upload and analyze RFP Excel files
 
 ### Using the AI Q&A
 
@@ -123,7 +127,14 @@ git push -u origin main
 4. Add your responses in the text areas
 5. Click "Download Response Template" to export completed responses
 
-## 🎨 Customization
+### Using the Search
+
+1. Type in the header search bar
+2. See grouped results across Capabilities, Case Studies, and KPIs
+3. Results update in real-time as you type
+4. Click outside the dropdown to close
+
+## Customization
 
 ### Updating Knowledge Base Content
 
@@ -132,10 +143,12 @@ Edit `knowledge-base-data.js` to add or modify:
 - Case studies
 - Service KPIs
 - Frameworks
+- Team members
+- Process timeline
 
 ### Styling
 
-Modify CSS variables in `styles.css` to customize:
+Modify CSS variables in `styles-modern.css` to customize:
 - Colors
 - Typography
 - Spacing
@@ -144,13 +157,14 @@ Modify CSS variables in `styles.css` to customize:
 
 ```css
 :root {
-    --color-primary: #2563eb;
-    --font-family: 'Inter', sans-serif;
+    --color-primary: #0f172a;
+    --color-accent-blue: #3b82f6;
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
     /* ... */
 }
 ```
 
-## 📊 Knowledge Base Structure
+## Knowledge Base Structure
 
 ### Capabilities
 Each capability includes:
@@ -175,22 +189,36 @@ Organized by category:
 - Compliance
 - Omnichannel
 
-## 🔧 Technical Details
+### Team
+Each team member includes:
+- Name and role
+- Bio and expertise
+- Photo
+
+### Process Timeline
+4-step engagement process:
+1. Audit - Comprehensive marketplace assessment
+2. Cleanup - GS1 compliance and brand protection
+3. Growth - Revenue acceleration strategies
+4. Scale - Sustained optimization and expansion
+
+## Technical Details
 
 ### React Components
 
 - `App` - Main application container
-- `Sidebar` - Navigation sidebar
-- `Header` - Top header with search
-- `HomePage` - Landing page with overview
+- `Sidebar` - Navigation sidebar with CTA button
+- `Header` - Top header with grouped search
+- `HomePage` - Landing page with process timeline
 - `CapabilitiesPage` - Capabilities listing
 - `CapabilityDetail` - Individual capability detail view
 - `CaseStudiesPage` - Case studies listing
 - `CaseStudyDetail` - Individual case study detail view
-- `KPIsPage` - Service KPIs overview
-- `AIQAPage` - AI-powered Q&A interface
-- `RFPAnalyzerPage` - RFP upload and analysis
-- `FrameworksPage` - Strategic frameworks
+- `KPIsPage` - Service KPIs overview with enhanced visuals
+- `AboutPage` - Team member profiles
+- `AIQAPage` - AI-powered Q&A interface (BETA)
+- `RFPAnalyzerPage` - RFP upload and analysis (BETA)
+- `FrameworksPage` - Strategic frameworks with interactive toggle
 
 ### AI Q&A Algorithm
 
@@ -211,7 +239,16 @@ The RFP Analyzer:
 5. Suggests relevant knowledge base references
 6. Exports formatted response template
 
-## 🤝 Contributing
+### Search Algorithm
+
+The enhanced search feature:
+1. Searches across all content types simultaneously
+2. Groups results by category (Capabilities, Case Studies, KPIs)
+3. Displays top 3 results per category
+4. Updates in real-time as user types
+5. Provides visual hierarchy with category headers
+
+## Contributing
 
 This is a private knowledge base for CPGIO. For updates or improvements, contact:
 
@@ -219,18 +256,18 @@ This is a private knowledge base for CPGIO. For updates or improvements, contact
 - **Phone**: (866) 764-4605 ext 712
 - **Website**: [cpg.io](https://cpg.io)
 
-## 📝 License
+## License
 
 Proprietary - CPGIO Internal Use Only
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built with React and modern web technologies
-- Inspired by Notion's clean, intuitive interface
+- Inspired by Notion and shadcn's clean, intuitive interfaces
 - Powered by CPGIO's proven methodologies and results
 
 ---
 
 **Last Updated**: November 2025
-**Version**: 1.0.0
+**Version**: 2.0.0
 **Maintainer**: CPGIO Business Development Team
