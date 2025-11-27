@@ -158,16 +158,20 @@
             return (
                 <aside className={`sidebar ${!sidebarOpen ? 'collapsed' : ''}`}>
                     <div className="sidebar-header">
-                        <div className="logo">
-                            {sidebarOpen ? (
-                                <>
-                                    <span className="logo-icon">CPGIO</span>
-                                    <span className="logo-text">Knowledge Base</span>
-                                </>
-                            ) : (
-                                <span className="logo-icon">CPG</span>
-                            )}
-                        </div>
+                        {sidebarOpen ? (
+                            <div className="logo">
+                                <span className="logo-icon">CPGIO</span>
+                                <span className="logo-text">Knowledge Base</span>
+                            </div>
+                        ) : (
+                            <button
+                                className="sidebar-toggle-collapsed"
+                                onClick={() => setSidebarOpen(true)}
+                                title="Expand sidebar"
+                            >
+                                <Icon name="menu" size={24} />
+                            </button>
+                        )}
                     </div>
 
                     <nav className="sidebar-nav">

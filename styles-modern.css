@@ -311,6 +311,36 @@ body {
 .sidebar-header {
     padding: var(--spacing-xl);
     border-bottom: 1px solid var(--sidebar-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar.collapsed .sidebar-header {
+    padding: var(--spacing-md);
+}
+
+.sidebar-toggle-collapsed {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-toggle-collapsed:hover {
+    background-color: var(--color-bg-hover);
+    color: var(--color-text-primary);
+}
+
+.sidebar-toggle-collapsed svg {
+    width: 24px;
+    height: 24px;
 }
 
 .logo {
