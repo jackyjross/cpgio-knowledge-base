@@ -641,6 +641,60 @@ const knowledgeBase = {
     }
   },
 
+  team: [
+    {
+      name: 'Jack Ross',
+      role: 'Founder & CEO',
+      bio: 'Ecommerce strategist with deep expertise in Amazon marketplace operations, brand protection, and omnichannel growth.',
+      photoUrl: 'https://via.placeholder.com/150'
+    },
+    {
+      name: 'Operations Team',
+      role: 'Fulfillment & Logistics',
+      bio: 'High-volume fulfillment specialists managing 200K+ units/month with <0.01% defect rates.',
+      photoUrl: 'https://via.placeholder.com/150'
+    },
+    {
+      name: 'Media Team',
+      role: 'Amazon Advertising & Growth',
+      bio: 'Data-driven media strategists achieving 5-8x ROAS and driving organic ranking acceleration.',
+      photoUrl: 'https://via.placeholder.com/150'
+    },
+    {
+      name: 'Compliance Team',
+      role: 'Brand Protection & GS1',
+      bio: 'Marketplace compliance experts specializing in GS1 validation, catalog cleanup, and rogue seller removal.',
+      photoUrl: 'https://via.placeholder.com/150'
+    }
+  ],
+
+  process: [
+    {
+      step: 1,
+      title: 'Audit',
+      description: 'Comprehensive marketplace audit identifying compliance issues, unauthorized sellers, catalog gaps, and growth opportunities. Delivered in 5-10 days.',
+      icon: 'search'
+    },
+    {
+      step: 2,
+      title: 'Cleanup',
+      description: 'Systematic marketplace cleanup: GS1 compliance restoration, rogue seller removal, catalog optimization, and brand protection implementation.',
+      icon: 'shield'
+    },
+    {
+      step: 3,
+      title: 'Growth',
+      description: 'Revenue acceleration through media optimization, catalog expansion, omnichannel launch, and data-driven ASIN prioritization.',
+      icon: 'trending-up'
+    },
+    {
+      step: 4,
+      title: 'Scale',
+      description: 'Sustained growth with continuous optimization, new platform expansion, product innovation, and operational excellence at volume.',
+      icon: 'rocket'
+    }
+  ],
+
   frameworks: {
     financialModels: {
       title: 'Financial Models & Operational Systems',

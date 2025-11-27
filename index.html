@@ -46,7 +46,11 @@
                 'moon': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>',
                 'sun': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>',
                 'upload': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>',
-                'arrow-right': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>'
+                'arrow-right': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
+                'search': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>',
+                'shield': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+                'rocket': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>',
+                'users': '<svg xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="STROKE" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
             };
 
             const svg = iconMap[name] || iconMap['home'];
@@ -112,6 +116,8 @@
                                 />
                             )}
                             {activeSection === 'kpis' && <KPIsPage searchQuery={searchQuery} />}
+                            {activeSection === 'frameworks' && <FrameworksPage searchQuery={searchQuery} />}
+                            {activeSection === 'about' && <AboutPage />}
                             {activeSection === 'ai-qa' && (
                                 <AIQAPage
                                     aiQuery={aiQuery}
@@ -128,7 +134,6 @@
                                     setUploadedRFP={setUploadedRFP}
                                 />
                             )}
-                            {activeSection === 'frameworks' && <FrameworksPage searchQuery={searchQuery} />}
                         </div>
                     </main>
 
@@ -151,30 +156,32 @@
                 { id: 'case-studies', label: 'Case Studies', icon: 'bar-chart-3' },
                 { id: 'kpis', label: 'Service KPIs', icon: 'trending-up' },
                 { id: 'frameworks', label: 'Frameworks', icon: 'target' },
-                { id: 'ai-qa', label: 'AI Q&A', icon: 'sparkles' },
-                { id: 'rfp-analyzer', label: 'RFP Analyzer', icon: 'file-text' },
+                { id: 'about', label: 'Team', icon: 'users' },
+                { id: 'ai-qa', label: 'AI Q&A', icon: 'sparkles', badge: 'BETA' },
+                { id: 'rfp-analyzer', label: 'RFP Analyzer', icon: 'file-text', badge: 'BETA' },
             ];
 
             return (
                 <aside className={`sidebar ${!sidebarOpen ? 'collapsed' : ''}`}>
-                    <div className="sidebar-header">
-                        {sidebarOpen ? (
+                    {sidebarOpen && (
+                        <div className="sidebar-header">
                             <div className="logo">
                                 <span className="logo-icon">CPGIO</span>
                                 <span className="logo-text">Knowledge Base</span>
                             </div>
-                        ) : (
-                            <button
-                                className="sidebar-toggle-collapsed"
-                                onClick={() => setSidebarOpen(true)}
-                                title="Expand sidebar"
-                            >
-                                <Icon name="menu" size={24} />
-                            </button>
-                        )}
-                    </div>
+                        </div>
+                    )}
 
                     <nav className="sidebar-nav">
+                        <button
+                            className="nav-item sidebar-toggle-btn"
+                            onClick={() => setSidebarOpen(!sidebarOpen)}
+                            title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+                        >
+                            <span className="nav-icon"><Icon name="menu" size={20} /></span>
+                            {sidebarOpen && <span className="nav-label">Collapse</span>}
+                        </button>
+
                         {navItems.map(item => (
                             <button
                                 key={item.id}
@@ -183,13 +190,21 @@
                                 title={!sidebarOpen ? item.label : ''}
                             >
                                 <span className="nav-icon"><Icon name={item.icon} size={20} /></span>
-                                {sidebarOpen && <span className="nav-label">{item.label}</span>}
+                                {sidebarOpen && (
+                                    <span className="nav-label">
+                                        {item.label}
+                                        {item.badge && <span className="badge-beta">{item.badge}</span>}
+                                    </span>
+                                )}
                             </button>
                         ))}
                     </nav>
 
                     {sidebarOpen && (
                         <div className="sidebar-footer">
+                            <button className="cta-button" onClick={() => window.location.href = 'mailto:sales@cpgio.com?subject=Requesting%20CPGIO%20Audit'}>
+                                Start Your Audit
+                            </button>
                             <div className="contact-info">
                                 <p className="contact-label">Contact</p>
                                 <p className="contact-detail">sales@cpgio.com</p>
@@ -204,6 +219,70 @@
 
         // Header Component
         function Header({ searchQuery, setSearchQuery, setSidebarOpen, sidebarOpen }) {
+            const [showResults, setShowResults] = useState(false);
+            const searchRef = useRef(null);
+
+            // Close dropdown when clicking outside
+            useEffect(() => {
+                const handleClickOutside = (event) => {
+                    if (searchRef.current && !searchRef.current.contains(event.target)) {
+                        setShowResults(false);
+                    }
+                };
+                document.addEventListener('mousedown', handleClickOutside);
+                return () => document.removeEventListener('mousedown', handleClickOutside);
+            }, []);
+
+            // Search across all content types
+            const getSearchResults = () => {
+                if (!searchQuery || searchQuery.length < 2) return null;
+
+                const query = searchQuery.toLowerCase();
+                const results = {
+                    capabilities: [],
+                    caseStudies: [],
+                    kpis: []
+                };
+
+                // Search capabilities
+                results.capabilities = knowledgeBase.capabilities.filter(cap =>
+                    cap.title.toLowerCase().includes(query) ||
+                    cap.description.toLowerCase().includes(query) ||
+                    cap.category.toLowerCase().includes(query)
+                ).slice(0, 3);
+
+                // Search case studies
+                results.caseStudies = knowledgeBase.caseStudies.filter(cs =>
+                    cs.title.toLowerCase().includes(query) ||
+                    cs.category.toLowerCase().includes(query) ||
+                    cs.brand.toLowerCase().includes(query) ||
+                    cs.challenge.toLowerCase().includes(query)
+                ).slice(0, 3);
+
+                // Search KPIs
+                const kpiCategories = Object.keys(knowledgeBase.serviceKPIs);
+                kpiCategories.forEach(category => {
+                    const kpis = knowledgeBase.serviceKPIs[category];
+                    Object.keys(kpis).forEach(key => {
+                        const kpi = kpis[key];
+                        if (key.toLowerCase().includes(query) ||
+                            kpi.value.toLowerCase().includes(query)) {
+                            results.kpis.push({ category, key, ...kpi });
+                        }
+                    });
+                });
+                results.kpis = results.kpis.slice(0, 3);
+
+                return results;
+            };
+
+            const searchResults = getSearchResults();
+            const hasResults = searchResults && (
+                searchResults.capabilities.length > 0 ||
+                searchResults.caseStudies.length > 0 ||
+                searchResults.kpis.length > 0
+            );
+
             return (
                 <header className="header">
                     <div className="header-left">
@@ -216,14 +295,58 @@
                         </button>
                     </div>
 
-                    <div className="header-search">
+                    <div className="header-search" ref={searchRef}>
                         <input
                             type="text"
                             placeholder="Search capabilities, case studies, KPIs..."
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onChange={(e) => {
+                                setSearchQuery(e.target.value);
+                                setShowResults(true);
+                            }}
+                            onFocus={() => setShowResults(true)}
                             className="search-input"
                         />
+
+                        {showResults && hasResults && (
+                            <div className="search-results-dropdown">
+                                {searchResults.capabilities.length > 0 && (
+                                    <div className="search-category">
+                                        <div className="search-category-title">Capabilities</div>
+                                        {searchResults.capabilities.map(cap => (
+                                            <div key={cap.id} className="search-result-item">
+                                                <strong>{cap.title}</strong>
+                                                <span className="search-result-meta">{cap.category}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {searchResults.caseStudies.length > 0 && (
+                                    <div className="search-category">
+                                        <div className="search-category-title">Case Studies</div>
+                                        {searchResults.caseStudies.map(cs => (
+                                            <div key={cs.id} className="search-result-item">
+                                                <strong>{cs.brand}</strong>
+                                                <span className="search-result-meta">{cs.category}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {searchResults.kpis.length > 0 && (
+                                    <div className="search-category">
+                                        <div className="search-category-title">KPIs</div>
+                                        {searchResults.kpis.map((kpi, idx) => (
+                                            <div key={idx} className="search-result-item">
+                                                <strong>{kpi.key}</strong>
+                                                <span className="search-result-meta">{kpi.value}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </header>
             );
@@ -311,6 +434,27 @@
                             <div className="card-stats">
                                 <span className="stat-badge">2 Frameworks</span>
                             </div>
+                        </div>
+                    </div>
+
+                    <div className="process-timeline">
+                        <h2 className="section-title">Our Engagement Process</h2>
+                        <div className="timeline-container">
+                            {knowledgeBase.process.map((step, index) => (
+                                <div key={step.step} className="timeline-step">
+                                    <div className="timeline-icon">
+                                        <Icon name={step.icon} size={32} />
+                                    </div>
+                                    <div className="timeline-content">
+                                        <div className="timeline-number">Step {step.step}</div>
+                                        <h3 className="timeline-title">{step.title}</h3>
+                                        <p className="timeline-description">{step.description}</p>
+                                    </div>
+                                    {index < knowledgeBase.process.length - 1 && (
+                                        <div className="timeline-connector"></div>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     </div>
 
@@ -1156,8 +1300,38 @@
             );
         }
 
+        // About/Team Page Component
+        function AboutPage() {
+            return (
+                <div className="page-content">
+                    <div className="page-header">
+                        <h1 className="page-title">Our Team</h1>
+                        <p className="page-subtitle">
+                            Meet the experts behind CPGIO's proven track record of eCommerce excellence.
+                        </p>
+                    </div>
+
+                    <div className="team-grid">
+                        {knowledgeBase.team.map((member, index) => (
+                            <div key={index} className="team-card">
+                                <div className="team-photo">
+                                    <img src={member.photoUrl} alt={member.name} />
+                                </div>
+                                <div className="team-info">
+                                    <h3 className="team-name">{member.name}</h3>
+                                    <p className="team-role">{member.role}</p>
+                                    <p className="team-bio">{member.bio}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
         // Frameworks Page Component
         function FrameworksPage({ searchQuery }) {
+            const [activeModel, setActiveModel] = useState('3pl');
             return (
                 <div className="page-content">
                     <div className="page-header">
@@ -1174,18 +1348,39 @@
                         </div>
                         <p className="framework-description">{knowledgeBase.frameworks.financialModels.description}</p>
 
+                        <div className="model-toggle">
+                            <button
+                                className={`toggle-btn ${activeModel === '3pl' ? 'active' : ''}`}
+                                onClick={() => setActiveModel('3pl')}
+                            >
+                                3PL Model
+                            </button>
+                            <button
+                                className={`toggle-btn ${activeModel === 'distribution' ? 'active' : ''}`}
+                                onClick={() => setActiveModel('distribution')}
+                            >
+                                Distribution Model
+                            </button>
+                        </div>
+
                         <div className="models-comparison">
-                            {knowledgeBase.frameworks.financialModels.models.map((model, idx) => (
-                                <div key={idx} className="model-card">
-                                    <h3 className="model-name">{model.name}</h3>
-                                    <p className="model-description">{model.description}</p>
-                                    <ul className="model-benefits">
-                                        {model.benefits.map((benefit, bidx) => (
-                                            <li key={bidx}>{benefit}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            ))}
+                            {knowledgeBase.frameworks.financialModels.models
+                                .filter((model, idx) =>
+                                    (activeModel === '3pl' && idx === 0) ||
+                                    (activeModel === 'distribution' && idx === 1)
+                                )
+                                .map((model, idx) => (
+                                    <div key={idx} className="model-card active-model">
+                                        <h3 className="model-name">{model.name}</h3>
+                                        <p className="model-description">{model.description}</p>
+                                        <div className="benefits-header">Benefits:</div>
+                                        <ul className="model-benefits">
+                                            {model.benefits.map((benefit, bidx) => (
+                                                <li key={bidx}>{benefit}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
                         </div>
 
                         <div className="framework-insight">

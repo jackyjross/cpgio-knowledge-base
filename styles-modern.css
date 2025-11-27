@@ -336,30 +336,16 @@ body {
 }
 
 .sidebar.collapsed .sidebar-header {
-    padding: var(--spacing-md);
+    display: none;
 }
 
-.sidebar-toggle-collapsed {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    padding: var(--spacing-sm);
-    border-radius: var(--radius-md);
-    transition: all var(--transition-base);
-    color: var(--color-text-secondary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.sidebar-toggle-btn {
+    /* Special styling for toggle button */
+    margin-bottom: var(--spacing-sm);
 }
 
-.sidebar-toggle-collapsed:hover {
-    background-color: var(--color-bg-hover);
-    color: var(--color-text-primary);
-}
-
-.sidebar-toggle-collapsed svg {
-    width: 24px;
-    height: 24px;
+.sidebar-toggle-btn .nav-icon {
+    /* Ensure icon is properly sized */
 }
 
 .logo {
@@ -2114,4 +2100,330 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+/* ===================================
+   NEW COMPONENTS - Enhancement Pack
+   =================================== */
+
+/* Beta Badge */
+.badge-beta {
+    font-size: 0.7em;
+    background: var(--color-accent-orange);
+    color: #000;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    margin-left: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* CTA Button in Sidebar */
+.cta-button {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.cta-button:active {
+    transform: translateY(0);
+}
+
+/* Process Timeline */
+.process-timeline {
+    margin: var(--spacing-3xl) 0;
+}
+
+.timeline-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-xl);
+}
+
+.timeline-step {
+    position: relative;
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    transition: all var(--transition-base);
+}
+
+.timeline-step:hover {
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+.timeline-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: var(--radius-xl);
+    margin-bottom: var(--spacing-md);
+}
+
+.timeline-number {
+    font-size: var(--font-size-sm);
+    color: var(--color-accent-blue);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.timeline-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.timeline-description {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+.timeline-connector {
+    display: none;
+}
+
+/* Team Grid */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-xl);
+}
+
+.team-card {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+    transition: all var(--transition-base);
+}
+
+.team-card:hover {
+    border-color: var(--color-accent-blue);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+}
+
+.team-photo {
+    margin-bottom: var(--spacing-md);
+}
+
+.team-photo img {
+    width: 120px;
+    height: 120px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    border: 3px solid var(--color-border);
+}
+
+.team-name {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.team-role {
+    font-size: var(--font-size-sm);
+    color: var(--color-accent-blue);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--spacing-md);
+}
+
+.team-bio {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+/* Financial Model Toggle */
+.model-toggle {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin: var(--spacing-xl) 0;
+    padding: 4px;
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-md);
+    width: fit-content;
+}
+
+.toggle-btn {
+    padding: 10px 24px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.toggle-btn.active {
+    background: var(--color-bg-primary);
+    color: var(--color-accent-blue);
+    box-shadow: var(--shadow-sm);
+}
+
+.toggle-btn:hover:not(.active) {
+    color: var(--color-text-primary);
+}
+
+.active-model {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.benefits-header {
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+    font-size: var(--font-size-base);
+}
+
+/* Enhanced KPI Visuals */
+.kpi-value {
+    font-size: 2em !important;
+    font-weight: 700 !important;
+    color: var(--color-accent-blue) !important;
+}
+
+.stat-value {
+    font-size: 2.5em !important;
+    font-weight: 700 !important;
+    color: var(--color-accent-blue) !important;
+}
+
+.kpi-badge .kpi-value {
+    font-size: 1.1em !important;
+    font-weight: 700 !important;
+    color: var(--color-accent-blue) !important;
+}
+
+/* Search Results Dropdown */
+.search-results-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.search-category {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.search-category:last-child {
+    border-bottom: none;
+}
+
+.search-category-title {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.search-result-item {
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-xs);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.search-result-item:hover {
+    background-color: var(--color-bg-secondary);
+}
+
+.search-result-item:last-child {
+    margin-bottom: 0;
+}
+
+.search-result-item strong {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+}
+
+.search-result-meta {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+}
+
+.header-search {
+    position: relative;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .timeline-container {
+        grid-template-columns: 1fr;
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .model-toggle {
+        width: 100%;
+    }
+
+    .toggle-btn {
+        flex: 1;
+    }
+
+    .search-results-dropdown {
+        max-height: 300px;
+    }
 }
