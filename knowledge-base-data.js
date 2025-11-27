@@ -777,21 +777,21 @@ const knowledgeBase = {
   glossary: [
     {
       term: 'ASIN',
-      definition: 'Amazon Standard Identification Number - A unique 10-character identifier assigned by Amazon to products in their catalog.',
+      definition: 'Amazon Standard Identification Number - A unique 10-character alphanumeric identifier assigned by Amazon to each product in their catalog for inventory management and customer search.',
       category: 'Amazon',
-      cpgioContext: 'We build, optimize, and protect ASINs to maximize ranking, conversion, and buy box control.'
+      cpgioContext: 'We build, optimize, and protect ASINs to maximize ranking, conversion, and buy box control across 800+ SKUs launched.'
     },
     {
-      term: '3P (Third Party)',
-      definition: 'Third-party sellers on Amazon who sell directly to customers. Inventory is owned by the seller, not Amazon.',
+      term: '3P (Third-Party Seller)',
+      definition: 'A person or company that sells products directly to customers on Amazon. Third-party sellers own their inventory and set their own prices, managing their business through Seller Central.',
       category: 'Amazon',
-      cpgioContext: 'Our 3PL model gives brands full control over pricing, inventory ownership, and marketplace strategy while we handle operations.'
+      cpgioContext: 'Our 3PL model gives brands full control over pricing, inventory ownership, and marketplace strategy while we handle operations at 48K units/hour velocity.'
     },
     {
-      term: '1P (First Party)',
-      definition: 'First-party selling where Amazon purchases inventory wholesale and resells it. Also known as Vendor Central.',
+      term: '1P (First-Party/Vendor)',
+      definition: 'A business relationship where Amazon purchases inventory wholesale from manufacturers and resells it as a retailer. Managed through Vendor Central, Amazon owns the inventory and controls pricing.',
       category: 'Amazon',
-      cpgioContext: 'We recommend starting with 3P to build data and control, then expanding top SKUs to 1P when appropriate.'
+      cpgioContext: 'We recommend starting with 3P to build data and control, then expanding top SKUs to 1P when scale and buy box performance justify the transition.'
     },
     {
       term: 'ROAS',
@@ -807,15 +807,21 @@ const knowledgeBase = {
     },
     {
       term: 'Buy Box',
-      definition: 'The prominent "Add to Cart" button on an Amazon product page. Winning the buy box means your offer is the default choice for customers.',
+      definition: 'The featured offer display on a product detail page showing the primary "Add to Cart" or "Buy Now" button. Multiple sellers may offer the same product, but only one wins the buy box at a time based on price, fulfillment method, seller performance, and availability.',
       category: 'Amazon',
-      cpgioContext: 'Through pricing discipline, FBA optimization, and seller performance, we achieve >95% buy box control for brand partners.'
+      cpgioContext: 'Through pricing discipline, FBA optimization, and seller performance metrics, we achieve >95% buy box control for brand partners, maximizing sales velocity.'
     },
     {
       term: 'A+ Content',
-      definition: 'Enhanced product descriptions with rich media, comparison charts, and brand storytelling. Available to Brand Registry sellers.',
+      definition: 'Enhanced product descriptions featuring rich media including images, comparison charts, and brand storytelling. Available exclusively to Brand Registry participants, it replaces standard product description text with visually engaging content.',
       category: 'Content',
-      cpgioContext: 'We build A+ Content at scale (400+ ASINs) to improve conversion rates and reduce returns through better product education.'
+      cpgioContext: 'We build A+ Content at scale (400+ ASINs) to improve conversion rates 5-10% and reduce returns through better product education and visual merchandising.'
+    },
+    {
+      term: 'Brand Registry',
+      definition: "Amazon's program for trademark owners to protect their brand and access enhanced selling tools. Provides access to Report a Violation, A+ Content, Sponsored Brands ads, and Brand Analytics.",
+      category: 'Brand Protection',
+      cpgioContext: 'We leverage Brand Registry to remove counterfeiters, control catalog content, access advanced advertising features, and establish IP protection for all brand partners.'
     },
     {
       term: 'FBA',
@@ -837,15 +843,27 @@ const knowledgeBase = {
     },
     {
       term: 'GS1',
-      definition: 'Global Standards Organization that issues authentic UPC barcodes. Amazon requires GS1-compliant UPCs for most categories.',
+      definition: 'Global Standards Organization that issues authentic UPC (Universal Product Code) barcodes. Amazon requires GS1-compliant UPCs for most categories to ensure product authenticity and prevent catalog abuse.',
       category: 'Compliance',
-      cpgioContext: 'We ensure 100% GS1 compliance to prevent listing suspensions and establish catalog integrity for Brand Registry.'
+      cpgioContext: 'We ensure 100% GS1 compliance to prevent listing suspensions, establish catalog integrity, and support Brand Registry enrollment for all partners.'
     },
     {
-      term: 'Brand Registry',
-      definition: "Amazon's program for trademark owners to protect their brand and access enhanced content tools.",
-      category: 'Brand Protection',
-      cpgioContext: 'We leverage Brand Registry to remove counterfeiters, control catalog content, and access advanced advertising features.'
+      term: 'Stranded Inventory',
+      definition: 'Inventory in Amazon fulfillment centers that cannot be sold because it is not associated with an active listing. This creates storage costs without revenue potential and requires immediate resolution.',
+      category: 'Logistics',
+      cpgioContext: 'We monitor stranded inventory daily and resolve listing issues within 24 hours to prevent storage fees and maintain inventory turnover velocity.'
+    },
+    {
+      term: 'Fulfillment Center',
+      definition: 'A short-term storage facility where customer orders are received, picked, packed, and shipped. Amazon operates a network of fulfillment centers globally for FBA sellers.',
+      category: 'Logistics',
+      cpgioContext: 'Our hybrid approach uses both Amazon fulfillment centers for FBA Prime orders and our own facilities for FBM, surge capacity, and specialized SKUs requiring co-packing.'
+    },
+    {
+      term: 'Product Detail Page',
+      definition: 'The main page on Amazon where product information appears, including title, images, bullet points, description, A+ Content, reviews, and available offers. This is where customers make purchase decisions.',
+      category: 'Content',
+      cpgioContext: 'We optimize every element of the product detail page—title, bullets, images, A+ Content—to improve conversion rates and organic ranking through keyword optimization and visual merchandising.'
     },
     {
       term: 'ACoS',
@@ -894,6 +912,36 @@ const knowledgeBase = {
       definition: 'Creating custom product bundles, kits, or multi-packs by combining individual items into new SKUs.',
       category: 'Logistics',
       cpgioContext: 'Our fulfillment centers provide co-packing for seasonal products, variety packs, and SIOC-optimized bundles.'
+    },
+    {
+      term: 'Counterfeit',
+      definition: 'The unlawful total or partial reproduction of a registered trademark in connection with the sale of a product. Includes knock-off designer items presented as authentic originals.',
+      category: 'Brand Protection',
+      cpgioContext: 'We use Brand Registry, Amazon Transparency, test buys, and IP enforcement to identify and remove counterfeit sellers, recovering $526K monthly revenue in one campaign.'
+    },
+    {
+      term: 'Sponsored Products',
+      definition: 'Cost-per-click ads that promote individual product listings on Amazon. Ads appear in search results and on product pages, helping increase visibility and sales.',
+      category: 'Media',
+      cpgioContext: 'We optimize Sponsored Products campaigns using Amazon Marketing Cloud data to achieve 5-8x ROAS while improving organic ranking through increased sales velocity.'
+    },
+    {
+      term: 'Seller Central',
+      definition: 'The web interface and dashboard used by third-party sellers to manage their Amazon business, including inventory, orders, advertising, and performance metrics.',
+      category: 'Amazon',
+      cpgioContext: 'We manage all aspects of Seller Central for brand partners—from catalog management to advertising optimization—providing full transparency through custom dashboards.'
+    },
+    {
+      term: 'Prime Badge',
+      definition: 'An icon appearing on product listings indicating eligibility for Amazon Prime benefits including free two-day shipping. Significantly increases conversion rates and buy box probability.',
+      category: 'Amazon',
+      cpgioContext: 'We ensure Prime eligibility through FBA optimization and inventory placement strategies to maximize conversion rates and competitive positioning.'
+    },
+    {
+      term: 'Listing Optimization',
+      definition: 'The process of improving product titles, bullet points, descriptions, images, and backend keywords to increase visibility in search results and improve conversion rates.',
+      category: 'Content',
+      cpgioContext: 'We optimize listings using data-driven keyword research, A/B testing, and conversion rate analysis to improve organic ranking and sales velocity across all SKUs.'
     }
   ]
 };
